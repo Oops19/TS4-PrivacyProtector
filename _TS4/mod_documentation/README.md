@@ -5,6 +5,21 @@ The ZIP file should be extracted into the `The Sims 4` folder to make sure that 
 
 Unless not yet installed: This mod requires S4CL, install it.
 
+## Usage to scan for eval() and exec()
+Ths mod does not inject into eval() and exec() due to 'limitations' of Python. Manual scanning is supported and recommended:
+* `o19.priv.scan eval` - Scan your Mods folder for code which contains eval(...).
+* `o19.priv.scan exec` - Scan your Mods folder for code which contains exec(...).
+* `o19.priv.scan foobar` Scan your Mods folder for code which contains 'foobar', actually you can specify a random string. But 'eval' and 'exec' are the most interesting.
+
+Output is written to the console and logged to the log file. There may be many matches like 'literal_eval', 'evaluate' or 'execute' which are considered as harmless.
+* Seems OK. Found eval in \sims4communitylib.ts4script(sims4communitylib/utils/cas/common_outfit_utils.pyc): ['\\x00\\x00\\x00\\xda\\x1devaluate_appearance_modi']
+* !!  !! Found eval in \_evil_\xxx.ts4script(xxx.pyc): ['\\x00\\x00\\x00\\xda\\x04eval\\xda\\x03hex\\xda\\x03l']
+* Found 'eval' 1 times.
+
+At the end you get a summary, the bad lines start with `''` while the 'good' lines start with 'Seems OK.' and don't count to towards the number of detected issues.
+This method can be used to scan for many things in script mods.
+Using eval or exec in a script mod is totally unnecessary. For the safety of your game you may want to remove mods which use one of these methods.
+
 ## License and Copying
 © 2022 Oops19
 https://creativecommons.org/licenses/by/4.0/ unless the EA TOS for UGC overrides it.

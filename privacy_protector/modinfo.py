@@ -28,8 +28,10 @@ class ModInfo(CommonModInfo):
 
     @property
     def _version(self) -> str:
-        return '1.0'
+        return '1.1'
+
 
 '''
+1.1 Added scan option
 1.0 Initial version
 '''
