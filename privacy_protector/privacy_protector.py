@@ -330,6 +330,34 @@ except Exception as e1:
 
 try:
     import socket
+    from socket import socket
+
+
+    @CommonInjectionUtils.inject_safely_into(ModInfo.get_identity(), socket, socket.__init__.__name__, handle_exceptions=False)
+    def o19_injected_socket_socket(original, self, *args, **kwargs):
+        O19PrivacyProtector.log_data('socket.socket', *args, **kwargs)
+        return original(self, *args, **kwargs)
+
+
+    log.debug("Injected into socket.socket()")
+except Exception as e1:
+    try:
+        o19_org_socket_socket = socket.socket
+
+
+        def o19_override_socket_socket(*args, **kwargs):
+            O19PrivacyProtector.log_data('socket.socket', *args, **kwargs)
+            return o19_org_socket_socket(*args, **kwargs)
+
+
+        socket.socket = o19_override_socket_socket
+        log.debug("Replaced socket.socket()")
+    except Exception as e2:
+        log.warn(f"'socket.socket()': Could not inject '{e1}' or replace '{e2}' ")
+
+
+try:
+    import socket
     from socket import socketpair
 
 
