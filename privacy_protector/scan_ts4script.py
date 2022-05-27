@@ -59,7 +59,11 @@ class Scanner:
         Scanner.thread.start()
 
     def _thread(*args, **kwargs):
-        time.sleep(60)
+        while True:
+            current_zone = services.current_zone()
+            if getattr(current_zone, 'is_zone_running', None):
+                break
+        # Scan mods not before all mods have been loaded
         Ts4ScriptFiles.scan_files(None, None)
 
         n = len(Ts4ScriptFiles.possible_issues)
