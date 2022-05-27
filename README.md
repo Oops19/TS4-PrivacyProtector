@@ -157,6 +157,10 @@ You may delete the mod but keep this file to make things work. Unless your endpo
 'commands.py' doesn't execute things in powershell/bash and it doesn't open URLs which auto-download malware but all this is possible from within TS4.
 With more and more malicious users targeting the community I decided to release this mod.
 
+## Known Issues
+This mod will cause an exception which is logged to lastException.txt as `FileNotFoundError: [Errno 2] No such file or directory: '50f50c67da416c0e5bc95ecb07a5a116d8b22106c27a1e60708b06e22eeed20b.zip'`.
+It tells you that this mod is starting up fine while I'm looking for a way to avoid it.
+
 ## License and Copying
 © 2022 Oops19
 https://creativecommons.org/licenses/by/4.0/ unless the EA TOS for UGC overrides it.
