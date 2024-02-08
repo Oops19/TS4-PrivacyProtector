@@ -136,22 +136,42 @@ class ModInfo(S4CLCommonModInfo):
 
     @property
     def _version(self) -> str:
-        return '1.6'
+        return '1.6.7'
 
 
-class MTSModInfo:
+class S4CLModInfo:
     mod_name = 'Privacy-Protector'
 
     @staticmethod
     def get_identity() -> str:
-        return MTSModInfo.mod_name
+        return S4CLModInfo.mod_name
 
 
 '''
-1.6 Finally fixed a weird bypass issue
-1.4 Added scanner to rS4CL at startup
-1.2 Replaced o19.priv.scan with 'privacy.search' - 'privacy.scan' will scan everything 
-1.2 Switched to .py instead of .ts4script for better detection rates
-1.1 Added scan
-1.0 Initial version
+v.1.6.7
+    Update README for new TS4 version
+v.1.6.6
+    Update README for new TS4 version
+v.1.6.5
+    Update README for new TS4 version
+v1.6.4
+    Remove ts4script.py from code
+v1.6.3
+    Updated for the current TS4 version
+v1.6.2
+    Reduced logging a bit
+v1.6.1
+    Scan delayed to start when the game is ready
+v1.6
+    Finally fixed a weird bypass issue
+v1.4
+    Added scanner to rS4CL at startup
+v1.2
+    Replaced o19.priv.scan with 'privacy.search' - 'privacy.scan' will scan everything 
+v1.2
+    Switched to .py instead of .ts4script for better detection rates
+v1.1
+    Added scan
+v1.0
+    Initial version
 '''

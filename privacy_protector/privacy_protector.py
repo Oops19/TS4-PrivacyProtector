@@ -9,19 +9,21 @@ Code heavily modified and merged together by o19 with written permission. All Py
 Most of my other mods use S4CL, embedding methods like this is a pain.
 Use S4CL https://github.com/ColonolNutty/Sims4CommunityLibrary unless you really feel the need to make a standalone mod.
 """
+
+
 import threading
 import time
 
 import services
-from privacy_protector.modinfo import MTSModInfo
-from privacy_protector.s4cl.mts_common_log_registry import MTSCommonLog
+from privacy_protector.modinfo import S4CLModInfo
+from privacy_protector.s4cl.s4cl_common_log_registry import S4CLCommonLog
 from privacy_protector.s4cl.s4cl_common_basic_notification import S4CLCommonBasicNotification
 
 from ui.ui_dialog_notification import UiDialogNotification
 
-log = MTSCommonLog(MTSModInfo.mod_name)
+log = S4CLCommonLog(S4CLModInfo.mod_name)
 log.enable()
-log.debug(f"Starting {MTSModInfo.mod_name}")
+log.debug(f"Starting {S4CLModInfo.mod_name}")
 
 
 class PrivacyProtector:
@@ -44,9 +46,13 @@ class PrivacyProtector:
         PrivacyProtector.thread.start()
 
     def _thread(*args, **kwargs):
+        n = 0
         while True:
             try:
-                log.debug(f"PrivacyProtector._cache: {PrivacyProtector._cache}")
+                n += 1
+                if PrivacyProtector._cache or n == 100:
+                    log.debug(f"PrivacyProtector._cache: {PrivacyProtector._cache}")
+                    n = 0
                 current_zone = services.current_zone()
                 if getattr(current_zone, 'is_zone_running', None):
                     if PrivacyProtector._cache:
@@ -55,7 +61,7 @@ class PrivacyProtector:
                         for message, urgency in local_cache.items():
                             PrivacyProtector.show_notification(message, urgency)
                         PrivacyProtector._cache = {}
-                time.sleep(15)
+                time.sleep(30)
             except Exception as e:
                 log.error(f"Oops '{e}' in PrivacyProtector._thread()")
                 time.sleep(60)

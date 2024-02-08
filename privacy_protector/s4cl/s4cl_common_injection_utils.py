@@ -12,22 +12,13 @@ Use S4CL https://github.com/ColonolNutty/Sims4CommunityLibrary unless you really
 
 
 import inspect
-import os
 from functools import wraps
 from typing import Any, Callable
-
-
-ON_RTD = os.environ.get('READTHEDOCS', None) == 'True'
 
 
 class S4CLCommonInjectionUtils:
     @staticmethod
     def inject_safely_into(nop, target_object: Any, target_function_name: str, handle_exceptions: bool = True) -> Callable:
-        if ON_RTD:
-            def _injected(wrap_function) -> Any:
-                return wrap_function
-            return _injected
-
         if handle_exceptions:
             def _function_wrapper(original_function, new_function: Callable[..., Any]) -> Any:
                 # noinspection PyBroadException
@@ -39,14 +30,7 @@ class S4CLCommonInjectionUtils:
                                 return new_function(original_function.fget, *args, **kwargs)
                             return new_function(original_function, *args, **kwargs)
                         except Exception as ex:
-                            try:
-                                from privacy_protector.modinfo import MTSModInfo
-                                from privacy_protector.s4cl.uncommon_log_registry import MTSCommonLog
-                                log = MTSCommonLog(MTSModInfo.mod_name)
-                                log.error(f"Error '{ex}'")
-                                log.error(f"    while injecting into function '{new_function.__name__}' of class '{target_object.__name__}'")
-                            except:
-                                pass
+                            pass
                             return original_function(*args, **kwargs)
                     if inspect.ismethod(original_function):
                         return classmethod(_wrapped_function)

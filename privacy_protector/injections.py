@@ -15,12 +15,12 @@ import sys
 import threading
 import traceback
 
-from privacy_protector.modinfo import MTSModInfo
+from privacy_protector.modinfo import S4CLModInfo
 from privacy_protector.privacy_protector import PrivacyProtector
 from privacy_protector.s4cl.s4cl_common_injection_utils import S4CLCommonInjectionUtils
-from privacy_protector.s4cl.mts_common_log_registry import MTSCommonLog
+from privacy_protector.s4cl.s4cl_common_log_registry import S4CLCommonLog
 
-log = MTSCommonLog(MTSModInfo.mod_name)
+log = S4CLCommonLog(S4CLModInfo.mod_name)
 log.debug("Injections ...")
 
 
@@ -43,7 +43,7 @@ class O19Injections:
             log.error(f"Error in 'log_data': '{e}'")
 
         try:
-            notify_message = f"Privacy violated.\r\nSee 'The Sims 4/mod_logs/{MTSModInfo.mod_name}.txt' for more details."
+            notify_message = f"Privacy violated.\r\nSee 'The Sims 4/mod_logs/{S4CLModInfo.mod_name}.txt' for more details."
             PrivacyProtector.show_notification(f"{notify_message}\n{_method}(...)")
         except Exception as e:
             log.error(f"Error in show_notification({e})")
@@ -61,7 +61,7 @@ try:
     import ftplib
     from ftplib import FTP
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), FTP, FTP.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), FTP, FTP.__init__.__name__, handle_exceptions=False)
     def o19_injected_ftplib_ftp(original, self, *args, **kwargs):
         O19Injections.log_data('ftplib.FTP', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -82,7 +82,7 @@ try:
     import webbrowser
     from webbrowser import open
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), open, open.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), open, open.__init__.__name__, handle_exceptions=False)
     def o19_injected_webbrowser_open(original, self, *args, **kwargs):
         O19Injections.log_data('webbrowser.open', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -103,7 +103,7 @@ try:
     import os
     from os import startfile
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), startfile, startfile.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), startfile, startfile.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_startfile(original, self, *args, **kwargs):
         O19Injections.log_data('os.startfile', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -124,7 +124,7 @@ try:
     import os
     from os import execl
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), execl, execl.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), execl, execl.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_execl(original, self, *args, **kwargs):
         O19Injections.log_data('os.execl', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -145,7 +145,7 @@ try:
     import os
     from os import execve
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), execve, execve.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), execve, execve.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_execve(original, self, *args, **kwargs):
         O19Injections.log_data('os.execve', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -166,7 +166,7 @@ try:
     import os
     from os import spawnv
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), spawnv, spawnv.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), spawnv, spawnv.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_spawnv(original, self, *args, **kwargs):
         O19Injections.log_data('os.spawnv', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -187,7 +187,7 @@ try:
     import os
     from os import spawnve
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), spawnve, spawnve.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), spawnve, spawnve.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_spawnve(original, self, *args, **kwargs):
         O19Injections.log_data('os.spawnve', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -208,7 +208,7 @@ try:
     import os
     from os import system
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), system, system.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), system, system.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_system(original, self, *args, **kwargs):
         O19Injections.log_data('os.system', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -229,7 +229,7 @@ try:
     import os
     from os import popen
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), popen, popen.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), popen, popen.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_popen(original, self, *args, **kwargs):
         O19Injections.log_data('os.popen', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -250,7 +250,7 @@ try:
     import socket
     from socket import socket
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), socket, socket.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), socket, socket.__init__.__name__, handle_exceptions=False)
     def o19_injected_socket_socket(original, self, *args, **kwargs):
         O19Injections.log_data('socket.socket', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -271,7 +271,7 @@ try:
     import socket
     from socket import socketpair
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), socketpair, socketpair.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), socketpair, socketpair.__init__.__name__, handle_exceptions=False)
     def o19_injected_socket_socketpair(original, self, *args, **kwargs):
         O19Injections.log_data('socket.socketpair', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -292,7 +292,7 @@ try:
     import socket
     from socket import fromfd
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), fromfd, fromfd.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), fromfd, fromfd.__init__.__name__, handle_exceptions=False)
     def o19_injected_socket_fromfd(original, self, *args, **kwargs):
         O19Injections.log_data('socket.fromfd', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -313,7 +313,7 @@ try:
     import socket
     from socket import fromshare
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), fromshare, fromshare.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), fromshare, fromshare.__init__.__name__, handle_exceptions=False)
     def o19_injected_socket_fromshare(original, self, *args, **kwargs):
         O19Injections.log_data('socket.fromshare', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -334,7 +334,7 @@ try:
     import socket
     from socket import create_connection
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), create_connection, create_connection.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), create_connection, create_connection.__init__.__name__, handle_exceptions=False)
     def o19_injected_socket_create_connection(original, self, *args, **kwargs):
         O19Injections.log_data('socket.create_connection', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -355,7 +355,7 @@ try:
     import subprocess
     from subprocess import run
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), run, run.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), run, run.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_run(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.run', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -376,7 +376,7 @@ try:
     import subprocess
     from subprocess import Popen
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), Popen, Popen.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), Popen, Popen.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_popen(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.Popen', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -397,7 +397,7 @@ try:
     import subprocess
     from subprocess import call
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), call, call.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), call, call.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_call(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.call', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -418,7 +418,7 @@ try:
     import subprocess
     from subprocess import check_call
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), check_call, check_call.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), check_call, check_call.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_check_call(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.check_call', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -439,7 +439,7 @@ try:
     import subprocess
     from subprocess import check_output
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), check_output, check_output.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), check_output, check_output.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_check_output(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.check_output', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -460,7 +460,7 @@ try:
     import subprocess
     from subprocess import getoutput
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), getoutput, getoutput.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), getoutput, getoutput.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_getoutput(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.getoutput', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -481,7 +481,7 @@ try:
     import subprocess
     from subprocess import getstatusoutput
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), getstatusoutput, getstatusoutput.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), getstatusoutput, getstatusoutput.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_getstatusoutput(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.getstatusoutput', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -502,7 +502,7 @@ try:
     import asyncio
     from asyncio import create_subprocess_shell
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), create_subprocess_shell, create_subprocess_shell.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), create_subprocess_shell, create_subprocess_shell.__init__.__name__, handle_exceptions=False)
     def o19_injected_asyncio_create_subprocess_shell(original, self, *args, **kwargs):
         O19Injections.log_data('asyncio.create_subprocess_shell', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -523,7 +523,7 @@ try:
     import asyncio
     from asyncio import get_event_loop_policy
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), get_event_loop_policy, get_event_loop_policy.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), get_event_loop_policy, get_event_loop_policy.__init__.__name__, handle_exceptions=False)
     def o19_injected_asyncio_get_event_loop_policy(original, self, *args, **kwargs):
         O19Injections.log_data('asyncio.get_event_loop_policy', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -544,7 +544,7 @@ try:
     import asyncio
     from asyncio import create_subprocess_exec
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), create_subprocess_exec, create_subprocess_exec.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), create_subprocess_exec, create_subprocess_exec.__init__.__name__, handle_exceptions=False)
     def o19_injected_asyncio_create_subprocess_exec(original, self, *args, **kwargs):
         O19Injections.log_data('asyncio.create_subprocess_exec', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -566,7 +566,7 @@ try:
     import urllib.request
     from urllib.request import urlopen
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), urlopen, urlopen.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), urlopen, urlopen.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_urlopen(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.urlopen', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -588,7 +588,7 @@ try:
     import urllib.request
     from urllib.request import Request
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), Request, Request.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), Request, Request.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_request(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.Request', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -609,7 +609,7 @@ try:
     import urllib.request
     from urllib.request import FancyURLopener
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), FancyURLopener, FancyURLopener.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), FancyURLopener, FancyURLopener.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_fancyurlopener(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.FancyURLopener', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -630,7 +630,7 @@ try:
     import urllib.request
     from urllib.request import OpenerDirector
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), OpenerDirector, OpenerDirector.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), OpenerDirector, OpenerDirector.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_openerdirector(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.OpenerDirector', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -651,7 +651,7 @@ try:
     import urllib.request
     from urllib.request import AbstractHTTPHandler
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), AbstractHTTPHandler, AbstractHTTPHandler.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), AbstractHTTPHandler, AbstractHTTPHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_abstracthttphandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.AbstractHTTPHandler', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -672,7 +672,7 @@ try:
     import urllib.request
     from urllib.request import BaseHandler
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), BaseHandler, BaseHandler.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), BaseHandler, BaseHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_basehandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.BaseHandler', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -693,7 +693,7 @@ try:
     import urllib.request
     from urllib.request import ProxyHandler
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), ProxyHandler, ProxyHandler.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), ProxyHandler, ProxyHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_proxyhandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.ProxyHandler', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -714,7 +714,7 @@ try:
     import urllib.request
     from urllib.request import HTTPHandler
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), HTTPHandler, HTTPHandler.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), HTTPHandler, HTTPHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_httphandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.HTTPHandler', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -735,7 +735,7 @@ try:
     import urllib.request
     from urllib.request import FileHandler
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), FileHandler, FileHandler.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), FileHandler, FileHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_filehandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.FileHandler', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -756,7 +756,7 @@ try:
     import urllib.request
     from urllib.request import FTPHandler
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), FTPHandler, FTPHandler.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), FTPHandler, FTPHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_ftphandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.FTPHandler', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -778,7 +778,7 @@ try:
     import urllib.request
     from urllib.request import CacheFTPHandler
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), CacheFTPHandler, CacheFTPHandler.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), CacheFTPHandler, CacheFTPHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_cacheftphandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.CacheFTPHandler', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -799,7 +799,7 @@ try:
     import urllib.request
     from urllib.request import URLopener
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), URLopener, URLopener.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), URLopener, URLopener.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_urlopener(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.URLopener', *args, **kwargs)
         return original(self, *args, **kwargs)
@@ -820,7 +820,7 @@ try:
     import urllib.request
     from urllib.request import ftpwrapper
 
-    @S4CLCommonInjectionUtils.inject_safely_into(MTSModInfo.get_identity(), ftpwrapper, ftpwrapper.__init__.__name__, handle_exceptions=False)
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), ftpwrapper, ftpwrapper.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_ftpwrapper(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.ftpwrapper', *args, **kwargs)
         return original(self, *args, **kwargs)

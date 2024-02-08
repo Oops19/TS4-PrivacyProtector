@@ -14,14 +14,13 @@ import threading
 import services
 import sims4
 import sims4.commands
-from privacy_protector.modinfo import MTSModInfo
+from privacy_protector.modinfo import S4CLModInfo
 from ui.ui_dialog_notification import UiDialogNotification
 
 from privacy_protector.privacy_protector import PrivacyProtector
-from privacy_protector.s4cl.mts_common_log_registry import MTSCommonLog
+from privacy_protector.s4cl.s4cl_common_log_registry import S4CLCommonLog
 
-
-log = MTSCommonLog(MTSModInfo.mod_name)
+log = S4CLCommonLog(S4CLModInfo.mod_name)
 log.debug(f"Scanner ...")
 
 
@@ -50,7 +49,7 @@ class Scanner:
         file_list = Ts4ScriptFiles.get_files(mods_path)
         for files in file_list:
             Ts4ScriptFiles.allow_list.append(files[1])
-        log.debug(f"Skipping {Ts4ScriptFiles.allow_list}")
+        log.debug(f"Scanner will not scan: {Ts4ScriptFiles.allow_list}")
 
         if Scanner.thread:
             return
@@ -63,7 +62,9 @@ class Scanner:
             current_zone = services.current_zone()
             if getattr(current_zone, 'is_zone_running', None):
                 break
-        # Scan mods not before all mods have been loaded
+            time.sleep(1)
+        log.debug(f"Scanner: Starting scan ...")
+        # Scan mods not before all mods have been zone_loaded
         Ts4ScriptFiles.scan_files(None, None)
 
         n = len(Ts4ScriptFiles.possible_issues)
@@ -151,6 +152,7 @@ class Ts4ScriptFiles:
                 if zipfile == f"{os.sep}{os.path.join('_o19_', 'privacy_protector.ts4script')}":
                     prefix = "Self."
                 elif class_string and class_string not in f"{data}":
+                    # elif class_string and re.findall("[^g-z_]" + f"{class_string}" + "[^A-Za-z0-9_.]", f"{data}"):
                     prefix = f"Seems OK ({class_string} not found)."
                 else:
                     r = '[^g-z_]' + f"{search_string}" + '[^A-Za-z0-9_.]'
