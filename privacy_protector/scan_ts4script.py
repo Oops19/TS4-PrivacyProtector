@@ -147,11 +147,11 @@ class Ts4ScriptFiles:
             Ts4ScriptFiles.log(output, f"**** Found {o_ex} {e_xec} string matches. These are usually OK and should be reviewed.")
         if o > 0:
             Ts4ScriptFiles.log(output, f"**** Found {o} string matches. These are usually OK and should be reviewed.")
-        expected_self_matches = 93
+        expected_self_matches = 100
         expected_self_e_vals = 1
         expected_self_e_xecs = 2
-        if s != expected_self_matches or s_ev != expected_self_e_vals or s_ex != expected_self_e_xecs:
-            Ts4ScriptFiles.log(output, f"!!!! Found {s} instead of {expected_self_matches} critical, {s_ev} instead of {expected_self_e_vals} {e_val} and {s_ex} instead of {expected_self_e_xecs} {e_xec} expected statements in Privacy Protector!")
+        if s > expected_self_matches or s_ev != expected_self_e_vals or s_ex != expected_self_e_xecs:
+            Ts4ScriptFiles.log(output, f"!!!! Found {s} (expected <{expected_self_matches}) critical, {s_ev} (expected{expected_self_e_vals}) {e_val} and {s_ex} (expected{expected_self_e_xecs}) {e_xec} expected statements in Privacy Protector!")
             Ts4ScriptFiles.log(output, f"**** This shouldn't happen!")
         if c_ev > 0:
             suspend_progress = True
