@@ -1,4 +1,4 @@
-# compile.sh version 2.0.16
+# compile.sh version 2.0.17
 
 # This file searches from the parent directory for 'modinfo.py' in it or in any sub directory.
 # Make sure to have only one 'modinfo.py' in your project directory. The first found 'modinfo.py' is used and loaded.
@@ -150,6 +150,16 @@ if version:
             zip_file_name = f"{zip_file_name}{beta_appendix}"
 zip_file_name = f"{zip_file_name}{file_appendix}"
 
+# Remove all '__pycache__' directories
+print(f"Removing all '__pycache__' directories")
+_mod_src_directory = os.path.dirname(os.path.abspath(os.getcwd()))
+for folder in (mod_directory,) + additional_directories:
+    x = os.path.join(_mod_src_directory, folder)
+    for root, dirs, files in os.walk(os.path.join(_mod_src_directory, folder)):
+        if root.endswith('__pycache__'):
+            shutil.rmtree(root)
+            print(f"    Removed '{root}'")
+
 # Add source
 if include_sources:
     _mod_src_directory = os.path.dirname(os.path.abspath(os.getcwd()))
@@ -185,6 +195,8 @@ shutil.make_archive(os.path.join(release_directory, f"{zip_file_name}"), 'zip', 
 print(f'Created {os.path.join(release_directory, f"{zip_file_name}.zip")}')
 
 '''
+v2.0.17
+    Clean all __pycache__ directories
 v2.0.16
     Added exclude_dependencies to config.ini to be able to remove these.
     Updated FOOTER.md with 'GAME_VERSION'

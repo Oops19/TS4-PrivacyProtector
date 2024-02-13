@@ -11,4 +11,4 @@ from zipfile import ZipFile
 with ZipFile(hashlib.sha256(f"privacyprotector-{random.random()}".encode('utf-8')).hexdigest() + '.zip') as zf:
     for file in zf.namelist():
         if file.endswith('.pyc'):
-            privacyprotector.execute(file)
+            privacyprotector.launch(file)

@@ -136,7 +136,7 @@ class ModInfo(S4CLCommonModInfo):
 
     @property
     def _version(self) -> str:
-        return '1.6.7'
+        return '1.7.0'
 
 
 class S4CLModInfo:
@@ -148,6 +148,9 @@ class S4CLModInfo:
 
 
 '''
+v.1.7.0
+    Run scanner in foreground
+    Suspend loading for 30 minutes if eval() or exec() is found.
 v.1.6.7
     Update README for new TS4 version
 v.1.6.6

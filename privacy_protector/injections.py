@@ -4,13 +4,6 @@
 #
 
 
-import ftplib
-import webbrowser
-import os
-import socket
-import subprocess
-import urllib.request
-
 import sys
 import threading
 import traceback
@@ -42,6 +35,8 @@ class O19Injections:
         except Exception as e:
             log.error(f"Error in 'log_data': '{e}'")
 
+        if _method in ['eval', 'exec']:
+            return
         try:
             notify_message = f"Privacy violated.\r\nSee 'The Sims 4/mod_logs/{S4CLModInfo.mod_name}.txt' for more details."
             PrivacyProtector.show_notification(f"{notify_message}\n{_method}(...)")
@@ -51,16 +46,32 @@ class O19Injections:
         raise PrivacyViolationException("Blocking privacy violation!")
 
 
-'''
-Technically these injections work. TS4 Python wont always honor these for unknown reasons.
-So there is a way to skip these, especially during load time. 
-'''
+try:
+    import imp
+    from imp import load_source
+    
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), load_source, load_source.__init__.__name__, handle_exceptions=False)
+    def o19_injected_imp_load_source(original, self, *args, **kwargs):
+        O19Injections.log_data('imp.load_source', *args, **kwargs)
+        return original(self, *args, **kwargs)
+    log.debug("Injected into imp.load_source()")
+except Exception as e1:
+    try:
+        o19_org_imp_load_source = imp.load_source
+        
+        def o19_override_imp_load_source(*args, **kwargs):
+            O19Injections.log_data('imp.load_source', *args, **kwargs)
+            return o19_org_imp_load_source(*args, **kwargs)
+        imp.load_source = o19_override_imp_load_source
+        log.debug("Replaced imp.load_source()")
+    except Exception as e2:
+        log.warn(f"'imp.load_source()': Could not inject '{e1}' or replace '{e2}' ")
 
 
 try:
     import ftplib
     from ftplib import FTP
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), FTP, FTP.__init__.__name__, handle_exceptions=False)
     def o19_injected_ftplib_ftp(original, self, *args, **kwargs):
         O19Injections.log_data('ftplib.FTP', *args, **kwargs)
@@ -69,7 +80,7 @@ try:
 except Exception as e1:
     try:
         o19_org_ftplib_ftp = ftplib.FTP
-
+        
         def o19_override_ftplib_ftp(*args, **kwargs):
             O19Injections.log_data('ftplib.FTP', *args, **kwargs)
             return o19_org_ftplib_ftp(*args, **kwargs)
@@ -78,31 +89,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'ftplib.FTP()': Could not inject '{e1}' or replace '{e2}' ")
 
-try:
-    import webbrowser
-    from webbrowser import open
-
-    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), open, open.__init__.__name__, handle_exceptions=False)
-    def o19_injected_webbrowser_open(original, self, *args, **kwargs):
-        O19Injections.log_data('webbrowser.open', *args, **kwargs)
-        return original(self, *args, **kwargs)
-    log.debug("Injected into webbrowser.open()")
-except Exception as e1:
-    try:
-        o19_org_webbrowser_open = webbrowser.open
-
-        def o19_override_webbrowser_open(*args, **kwargs):
-            O19Injections.log_data('webbrowser.open', *args, **kwargs)
-            return o19_org_webbrowser_open(*args, **kwargs)
-        webbrowser.open = o19_override_webbrowser_open
-        log.debug("Replaced webbrowser.open()")
-    except Exception as e2:
-        log.warn(f"'webbrowser.open()': Could not inject '{e1}' or replace '{e2}' ")
 
 try:
     import os
     from os import startfile
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), startfile, startfile.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_startfile(original, self, *args, **kwargs):
         O19Injections.log_data('os.startfile', *args, **kwargs)
@@ -111,7 +102,7 @@ try:
 except Exception as e1:
     try:
         o19_org_os_startfile = os.startfile
-
+        
         def o19_override_os_startfile(*args, **kwargs):
             O19Injections.log_data('os.startfile', *args, **kwargs)
             return o19_org_os_startfile(*args, **kwargs)
@@ -120,10 +111,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'os.startfile()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import os
     from os import execl
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), execl, execl.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_execl(original, self, *args, **kwargs):
         O19Injections.log_data('os.execl', *args, **kwargs)
@@ -132,7 +124,7 @@ try:
 except Exception as e1:
     try:
         o19_org_os_execl = os.execl
-
+        
         def o19_override_os_execl(*args, **kwargs):
             O19Injections.log_data('os.execl', *args, **kwargs)
             return o19_org_os_execl(*args, **kwargs)
@@ -141,10 +133,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'os.execl()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import os
     from os import execve
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), execve, execve.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_execve(original, self, *args, **kwargs):
         O19Injections.log_data('os.execve', *args, **kwargs)
@@ -153,19 +146,20 @@ try:
 except Exception as e1:
     try:
         o19_org_os_execve = os.execve
+        
         def o19_override_os_execve(*args, **kwargs):
             O19Injections.log_data('os.execve', *args, **kwargs)
             return o19_org_os_execve(*args, **kwargs)
-
         os.execve = o19_override_os_execve
         log.debug("Replaced os.execve()")
     except Exception as e2:
         log.warn(f"'os.execve()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import os
     from os import spawnv
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), spawnv, spawnv.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_spawnv(original, self, *args, **kwargs):
         O19Injections.log_data('os.spawnv', *args, **kwargs)
@@ -174,7 +168,7 @@ try:
 except Exception as e1:
     try:
         o19_org_os_spawnv = os.spawnv
-
+        
         def o19_override_os_spawnv(*args, **kwargs):
             O19Injections.log_data('os.spawnv', *args, **kwargs)
             return o19_org_os_spawnv(*args, **kwargs)
@@ -183,10 +177,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'os.spawnv()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import os
     from os import spawnve
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), spawnve, spawnve.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_spawnve(original, self, *args, **kwargs):
         O19Injections.log_data('os.spawnve', *args, **kwargs)
@@ -195,7 +190,7 @@ try:
 except Exception as e1:
     try:
         o19_org_os_spawnve = os.spawnve
-
+        
         def o19_override_os_spawnve(*args, **kwargs):
             O19Injections.log_data('os.spawnve', *args, **kwargs)
             return o19_org_os_spawnve(*args, **kwargs)
@@ -204,10 +199,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'os.spawnve()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import os
     from os import system
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), system, system.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_system(original, self, *args, **kwargs):
         O19Injections.log_data('os.system', *args, **kwargs)
@@ -216,7 +212,7 @@ try:
 except Exception as e1:
     try:
         o19_org_os_system = os.system
-
+        
         def o19_override_os_system(*args, **kwargs):
             O19Injections.log_data('os.system', *args, **kwargs)
             return o19_org_os_system(*args, **kwargs)
@@ -225,10 +221,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'os.system()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import os
     from os import popen
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), popen, popen.__init__.__name__, handle_exceptions=False)
     def o19_injected_os_popen(original, self, *args, **kwargs):
         O19Injections.log_data('os.popen', *args, **kwargs)
@@ -237,7 +234,7 @@ try:
 except Exception as e1:
     try:
         o19_org_os_popen = os.popen
-
+        
         def o19_override_os_popen(*args, **kwargs):
             O19Injections.log_data('os.popen', *args, **kwargs)
             return o19_org_os_popen(*args, **kwargs)
@@ -246,10 +243,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'os.popen()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import socket
     from socket import socket
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), socket, socket.__init__.__name__, handle_exceptions=False)
     def o19_injected_socket_socket(original, self, *args, **kwargs):
         O19Injections.log_data('socket.socket', *args, **kwargs)
@@ -258,7 +256,7 @@ try:
 except Exception as e1:
     try:
         o19_org_socket_socket = socket.socket
-
+        
         def o19_override_socket_socket(*args, **kwargs):
             O19Injections.log_data('socket.socket', *args, **kwargs)
             return o19_org_socket_socket(*args, **kwargs)
@@ -267,10 +265,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'socket.socket()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import socket
     from socket import socketpair
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), socketpair, socketpair.__init__.__name__, handle_exceptions=False)
     def o19_injected_socket_socketpair(original, self, *args, **kwargs):
         O19Injections.log_data('socket.socketpair', *args, **kwargs)
@@ -279,7 +278,7 @@ try:
 except Exception as e1:
     try:
         o19_org_socket_socketpair = socket.socketpair
-
+        
         def o19_override_socket_socketpair(*args, **kwargs):
             O19Injections.log_data('socket.socketpair', *args, **kwargs)
             return o19_org_socket_socketpair(*args, **kwargs)
@@ -288,10 +287,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'socket.socketpair()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import socket
     from socket import fromfd
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), fromfd, fromfd.__init__.__name__, handle_exceptions=False)
     def o19_injected_socket_fromfd(original, self, *args, **kwargs):
         O19Injections.log_data('socket.fromfd', *args, **kwargs)
@@ -300,7 +300,7 @@ try:
 except Exception as e1:
     try:
         o19_org_socket_fromfd = socket.fromfd
-
+        
         def o19_override_socket_fromfd(*args, **kwargs):
             O19Injections.log_data('socket.fromfd', *args, **kwargs)
             return o19_org_socket_fromfd(*args, **kwargs)
@@ -309,10 +309,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'socket.fromfd()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import socket
     from socket import fromshare
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), fromshare, fromshare.__init__.__name__, handle_exceptions=False)
     def o19_injected_socket_fromshare(original, self, *args, **kwargs):
         O19Injections.log_data('socket.fromshare', *args, **kwargs)
@@ -321,7 +322,7 @@ try:
 except Exception as e1:
     try:
         o19_org_socket_fromshare = socket.fromshare
-
+        
         def o19_override_socket_fromshare(*args, **kwargs):
             O19Injections.log_data('socket.fromshare', *args, **kwargs)
             return o19_org_socket_fromshare(*args, **kwargs)
@@ -330,10 +331,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'socket.fromshare()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import socket
     from socket import create_connection
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), create_connection, create_connection.__init__.__name__, handle_exceptions=False)
     def o19_injected_socket_create_connection(original, self, *args, **kwargs):
         O19Injections.log_data('socket.create_connection', *args, **kwargs)
@@ -342,7 +344,7 @@ try:
 except Exception as e1:
     try:
         o19_org_socket_create_connection = socket.create_connection
-
+        
         def o19_override_socket_create_connection(*args, **kwargs):
             O19Injections.log_data('socket.create_connection', *args, **kwargs)
             return o19_org_socket_create_connection(*args, **kwargs)
@@ -351,10 +353,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'socket.create_connection()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import subprocess
     from subprocess import run
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), run, run.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_run(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.run', *args, **kwargs)
@@ -363,7 +366,7 @@ try:
 except Exception as e1:
     try:
         o19_org_subprocess_run = subprocess.run
-
+        
         def o19_override_subprocess_run(*args, **kwargs):
             O19Injections.log_data('subprocess.run', *args, **kwargs)
             return o19_org_subprocess_run(*args, **kwargs)
@@ -372,10 +375,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'subprocess.run()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import subprocess
     from subprocess import Popen
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), Popen, Popen.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_popen(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.Popen', *args, **kwargs)
@@ -384,7 +388,7 @@ try:
 except Exception as e1:
     try:
         o19_org_subprocess_popen = subprocess.Popen
-
+        
         def o19_override_subprocess_popen(*args, **kwargs):
             O19Injections.log_data('subprocess.Popen', *args, **kwargs)
             return o19_org_subprocess_popen(*args, **kwargs)
@@ -393,10 +397,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'subprocess.Popen()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import subprocess
     from subprocess import call
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), call, call.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_call(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.call', *args, **kwargs)
@@ -405,7 +410,7 @@ try:
 except Exception as e1:
     try:
         o19_org_subprocess_call = subprocess.call
-
+        
         def o19_override_subprocess_call(*args, **kwargs):
             O19Injections.log_data('subprocess.call', *args, **kwargs)
             return o19_org_subprocess_call(*args, **kwargs)
@@ -414,10 +419,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'subprocess.call()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import subprocess
     from subprocess import check_call
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), check_call, check_call.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_check_call(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.check_call', *args, **kwargs)
@@ -426,7 +432,7 @@ try:
 except Exception as e1:
     try:
         o19_org_subprocess_check_call = subprocess.check_call
-
+        
         def o19_override_subprocess_check_call(*args, **kwargs):
             O19Injections.log_data('subprocess.check_call', *args, **kwargs)
             return o19_org_subprocess_check_call(*args, **kwargs)
@@ -435,10 +441,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'subprocess.check_call()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import subprocess
     from subprocess import check_output
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), check_output, check_output.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_check_output(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.check_output', *args, **kwargs)
@@ -447,7 +454,7 @@ try:
 except Exception as e1:
     try:
         o19_org_subprocess_check_output = subprocess.check_output
-
+        
         def o19_override_subprocess_check_output(*args, **kwargs):
             O19Injections.log_data('subprocess.check_output', *args, **kwargs)
             return o19_org_subprocess_check_output(*args, **kwargs)
@@ -456,10 +463,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'subprocess.check_output()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import subprocess
     from subprocess import getoutput
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), getoutput, getoutput.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_getoutput(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.getoutput', *args, **kwargs)
@@ -468,7 +476,7 @@ try:
 except Exception as e1:
     try:
         o19_org_subprocess_getoutput = subprocess.getoutput
-
+        
         def o19_override_subprocess_getoutput(*args, **kwargs):
             O19Injections.log_data('subprocess.getoutput', *args, **kwargs)
             return o19_org_subprocess_getoutput(*args, **kwargs)
@@ -477,10 +485,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'subprocess.getoutput()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import subprocess
     from subprocess import getstatusoutput
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), getstatusoutput, getstatusoutput.__init__.__name__, handle_exceptions=False)
     def o19_injected_subprocess_getstatusoutput(original, self, *args, **kwargs):
         O19Injections.log_data('subprocess.getstatusoutput', *args, **kwargs)
@@ -489,7 +498,7 @@ try:
 except Exception as e1:
     try:
         o19_org_subprocess_getstatusoutput = subprocess.getstatusoutput
-
+        
         def o19_override_subprocess_getstatusoutput(*args, **kwargs):
             O19Injections.log_data('subprocess.getstatusoutput', *args, **kwargs)
             return o19_org_subprocess_getstatusoutput(*args, **kwargs)
@@ -498,74 +507,33 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'subprocess.getstatusoutput()': Could not inject '{e1}' or replace '{e2}' ")
 
-try:
-    import asyncio
-    from asyncio import create_subprocess_shell
 
-    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), create_subprocess_shell, create_subprocess_shell.__init__.__name__, handle_exceptions=False)
-    def o19_injected_asyncio_create_subprocess_shell(original, self, *args, **kwargs):
-        O19Injections.log_data('asyncio.create_subprocess_shell', *args, **kwargs)
+try:
+    import timeit
+    from timeit import timeit
+    
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), timeit, timeit.__init__.__name__, handle_exceptions=False)
+    def o19_injected_timeit_timeit(original, self, *args, **kwargs):
+        O19Injections.log_data('timeit.timeit', *args, **kwargs)
         return original(self, *args, **kwargs)
-    log.debug("Injected into asyncio.create_subprocess_shell()")
+    log.debug("Injected into timeit.timeit()")
 except Exception as e1:
     try:
-        o19_org_asyncio_create_subprocess_shell = asyncio.create_subprocess_shell
-
-        def o19_override_asyncio_create_subprocess_shell(*args, **kwargs):
-            O19Injections.log_data('asyncio.create_subprocess_shell', *args, **kwargs)
-            return o19_org_asyncio_create_subprocess_shell(*args, **kwargs)
-        asyncio.create_subprocess_shell = o19_override_asyncio_create_subprocess_shell
-        log.debug("Replaced asyncio.create_subprocess_shell()")
+        o19_org_timeit_timeit = timeit.timeit
+        
+        def o19_override_timeit_timeit(*args, **kwargs):
+            O19Injections.log_data('timeit.timeit', *args, **kwargs)
+            return o19_org_timeit_timeit(*args, **kwargs)
+        timeit.timeit = o19_override_timeit_timeit
+        log.debug("Replaced timeit.timeit()")
     except Exception as e2:
-        log.warn(f"'asyncio.create_subprocess_shell()': Could not inject '{e1}' or replace '{e2}' ")
+        log.warn(f"'timeit.timeit()': Could not inject '{e1}' or replace '{e2}' ")
+
 
 try:
-    import asyncio
-    from asyncio import get_event_loop_policy
-
-    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), get_event_loop_policy, get_event_loop_policy.__init__.__name__, handle_exceptions=False)
-    def o19_injected_asyncio_get_event_loop_policy(original, self, *args, **kwargs):
-        O19Injections.log_data('asyncio.get_event_loop_policy', *args, **kwargs)
-        return original(self, *args, **kwargs)
-    log.debug("Injected into asyncio.get_event_loop_policy()")
-except Exception as e1:
-    try:
-        o19_org_asyncio_get_event_loop_policy = asyncio.get_event_loop_policy
-
-        def o19_override_asyncio_get_event_loop_policy(*args, **kwargs):
-            O19Injections.log_data('asyncio.get_event_loop_policy', *args, **kwargs)
-            return o19_org_asyncio_get_event_loop_policy()
-        asyncio.get_event_loop_policy = o19_override_asyncio_get_event_loop_policy
-        log.debug("Replaced asyncio.get_event_loop_policy()")
-    except Exception as e2:
-        log.warn(f"'asyncio.get_event_loop_policy()': Could not inject '{e1}' or replace '{e2}' ")
-
-try:
-    import asyncio
-    from asyncio import create_subprocess_exec
-
-    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), create_subprocess_exec, create_subprocess_exec.__init__.__name__, handle_exceptions=False)
-    def o19_injected_asyncio_create_subprocess_exec(original, self, *args, **kwargs):
-        O19Injections.log_data('asyncio.create_subprocess_exec', *args, **kwargs)
-        return original(self, *args, **kwargs)
-    log.debug("Injected into asyncio.create_subprocess_exec()")
-except Exception as e1:
-    try:
-        o19_org_asyncio_create_subprocess_exec = asyncio.create_subprocess_exec
-
-        def o19_override_asyncio_create_subprocess_exec(*args, **kwargs):
-            O19Injections.log_data('asyncio.create_subprocess_exec', *args, **kwargs)
-            return o19_org_asyncio_create_subprocess_exec(*args, **kwargs)
-        asyncio.create_subprocess_exec = o19_override_asyncio_create_subprocess_exec
-        log.debug("Replaced asyncio.create_subprocess_exec()")
-    except Exception as e2:
-        log.warn(f"'asyncio.create_subprocess_exec()': Could not inject '{e1}' or replace '{e2}' ")
-
-try:
-    import urllib
     import urllib.request
     from urllib.request import urlopen
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), urlopen, urlopen.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_urlopen(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.urlopen', *args, **kwargs)
@@ -574,7 +542,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_urlopen = urllib.request.urlopen
-
+        
         def o19_override_urllib_request_urlopen(*args, **kwargs):
             O19Injections.log_data('urllib.request.urlopen', *args, **kwargs)
             return o19_org_urllib_request_urlopen(*args, **kwargs)
@@ -583,11 +551,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.urlopen()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
-    import urllib
     import urllib.request
     from urllib.request import Request
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), Request, Request.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_request(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.Request', *args, **kwargs)
@@ -596,7 +564,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_request = urllib.request.Request
-
+        
         def o19_override_urllib_request_request(*args, **kwargs):
             O19Injections.log_data('urllib.request.Request', *args, **kwargs)
             return o19_org_urllib_request_request(*args, **kwargs)
@@ -605,10 +573,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.Request()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import FancyURLopener
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), FancyURLopener, FancyURLopener.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_fancyurlopener(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.FancyURLopener', *args, **kwargs)
@@ -617,7 +586,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_fancyurlopener = urllib.request.FancyURLopener
-
+        
         def o19_override_urllib_request_fancyurlopener(*args, **kwargs):
             O19Injections.log_data('urllib.request.FancyURLopener', *args, **kwargs)
             return o19_org_urllib_request_fancyurlopener(*args, **kwargs)
@@ -626,10 +595,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.FancyURLopener()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import OpenerDirector
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), OpenerDirector, OpenerDirector.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_openerdirector(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.OpenerDirector', *args, **kwargs)
@@ -638,7 +608,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_openerdirector = urllib.request.OpenerDirector
-
+        
         def o19_override_urllib_request_openerdirector(*args, **kwargs):
             O19Injections.log_data('urllib.request.OpenerDirector', *args, **kwargs)
             return o19_org_urllib_request_openerdirector()
@@ -647,10 +617,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.OpenerDirector()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import AbstractHTTPHandler
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), AbstractHTTPHandler, AbstractHTTPHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_abstracthttphandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.AbstractHTTPHandler', *args, **kwargs)
@@ -659,7 +630,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_abstracthttphandler = urllib.request.AbstractHTTPHandler
-
+        
         def o19_override_urllib_request_abstracthttphandler(*args, **kwargs):
             O19Injections.log_data('urllib.request.AbstractHTTPHandler', *args, **kwargs)
             return o19_org_urllib_request_abstracthttphandler(*args, **kwargs)
@@ -668,10 +639,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.AbstractHTTPHandler()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import BaseHandler
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), BaseHandler, BaseHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_basehandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.BaseHandler', *args, **kwargs)
@@ -680,7 +652,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_basehandler = urllib.request.BaseHandler
-
+        
         def o19_override_urllib_request_basehandler(*args, **kwargs):
             O19Injections.log_data('urllib.request.BaseHandler', *args, **kwargs)
             return o19_org_urllib_request_basehandler()
@@ -689,10 +661,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.BaseHandler()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import ProxyHandler
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), ProxyHandler, ProxyHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_proxyhandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.ProxyHandler', *args, **kwargs)
@@ -701,7 +674,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_proxyhandler = urllib.request.ProxyHandler
-
+        
         def o19_override_urllib_request_proxyhandler(*args, **kwargs):
             O19Injections.log_data('urllib.request.ProxyHandler', *args, **kwargs)
             return o19_org_urllib_request_proxyhandler(*args, **kwargs)
@@ -710,10 +683,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.ProxyHandler()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import HTTPHandler
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), HTTPHandler, HTTPHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_httphandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.HTTPHandler', *args, **kwargs)
@@ -722,7 +696,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_httphandler = urllib.request.HTTPHandler
-
+        
         def o19_override_urllib_request_httphandler(*args, **kwargs):
             O19Injections.log_data('urllib.request.HTTPHandler', *args, **kwargs)
             return o19_org_urllib_request_httphandler(*args, **kwargs)
@@ -731,10 +705,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.HTTPHandler()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import FileHandler
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), FileHandler, FileHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_filehandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.FileHandler', *args, **kwargs)
@@ -743,7 +718,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_filehandler = urllib.request.FileHandler
-
+        
         def o19_override_urllib_request_filehandler(*args, **kwargs):
             O19Injections.log_data('urllib.request.FileHandler', *args, **kwargs)
             return o19_org_urllib_request_filehandler()
@@ -752,20 +727,20 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.FileHandler()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import FTPHandler
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), FTPHandler, FTPHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_ftphandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.FTPHandler', *args, **kwargs)
         return original(self, *args, **kwargs)
-
     log.debug("Injected into urllib.request.FTPHandler()")
 except Exception as e1:
     try:
         o19_org_urllib_request_ftphandler = urllib.request.FTPHandler
-
+        
         def o19_override_urllib_request_ftphandler(*args, **kwargs):
             O19Injections.log_data('urllib.request.FTPHandler', *args, **kwargs)
             return o19_org_urllib_request_ftphandler()
@@ -774,10 +749,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.FTPHandler()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import CacheFTPHandler
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), CacheFTPHandler, CacheFTPHandler.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_cacheftphandler(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.CacheFTPHandler', *args, **kwargs)
@@ -786,7 +762,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_cacheftphandler = urllib.request.CacheFTPHandler
-
+        
         def o19_override_urllib_request_cacheftphandler(*args, **kwargs):
             O19Injections.log_data('urllib.request.CacheFTPHandler', *args, **kwargs)
             return o19_org_urllib_request_cacheftphandler()
@@ -795,10 +771,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.CacheFTPHandler()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import URLopener
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), URLopener, URLopener.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_urlopener(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.URLopener', *args, **kwargs)
@@ -807,7 +784,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_urlopener = urllib.request.URLopener
-
+        
         def o19_override_urllib_request_urlopener(*args, **kwargs):
             O19Injections.log_data('urllib.request.URLopener', *args, **kwargs)
             return o19_org_urllib_request_urlopener(*args, **kwargs)
@@ -816,10 +793,11 @@ except Exception as e1:
     except Exception as e2:
         log.warn(f"'urllib.request.URLopener()': Could not inject '{e1}' or replace '{e2}' ")
 
+
 try:
     import urllib.request
     from urllib.request import ftpwrapper
-
+    
     @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), ftpwrapper, ftpwrapper.__init__.__name__, handle_exceptions=False)
     def o19_injected_urllib_request_ftpwrapper(original, self, *args, **kwargs):
         O19Injections.log_data('urllib.request.ftpwrapper', *args, **kwargs)
@@ -828,7 +806,7 @@ try:
 except Exception as e1:
     try:
         o19_org_urllib_request_ftpwrapper = urllib.request.ftpwrapper
-
+        
         def o19_override_urllib_request_ftpwrapper(*args, **kwargs):
             O19Injections.log_data('urllib.request.ftpwrapper', *args, **kwargs)
             return o19_org_urllib_request_ftpwrapper(*args, **kwargs)
@@ -836,5 +814,28 @@ except Exception as e1:
         log.debug("Replaced urllib.request.ftpwrapper()")
     except Exception as e2:
         log.warn(f"'urllib.request.ftpwrapper()': Could not inject '{e1}' or replace '{e2}' ")
+
+
+try:
+    import webbrowser
+    from webbrowser import open
+    
+    @S4CLCommonInjectionUtils.inject_safely_into(S4CLModInfo.get_identity(), open, open.__init__.__name__, handle_exceptions=False)
+    def o19_injected_webbrowser_open(original, self, *args, **kwargs):
+        O19Injections.log_data('webbrowser.open', *args, **kwargs)
+        return original(self, *args, **kwargs)
+    log.debug("Injected into webbrowser.open()")
+except Exception as e1:
+    try:
+        o19_org_webbrowser_open = webbrowser.open
+        
+        def o19_override_webbrowser_open(*args, **kwargs):
+            O19Injections.log_data('webbrowser.open', *args, **kwargs)
+            return o19_org_webbrowser_open(*args, **kwargs)
+        webbrowser.open = o19_override_webbrowser_open
+        log.debug("Replaced webbrowser.open()")
+    except Exception as e2:
+        log.warn(f"'webbrowser.open()': Could not inject '{e1}' or replace '{e2}' ")
+
 
 log.debug(f"Injections initialized")
