@@ -6,7 +6,7 @@
 
 import sims4
 import sims4.commands
-from privacy_protector.scan_ts4script import Ts4ScriptFiles
+from privacy_protector.scanner.scan_ts4script import Ts4ScriptFiles
 
 
 @sims4.commands.Command('privacy.search', command_type=sims4.commands.CommandType.Live)

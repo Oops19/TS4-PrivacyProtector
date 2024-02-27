@@ -14,9 +14,11 @@ import threading
 
 import services
 from privacy_protector.modinfo import S4CLModInfo
+from privacy_protector.ui.privacy_protector import PrivacyProtector
+from privacy_protector.w11.alert import Alert
 from ui.ui_dialog_notification import UiDialogNotification
 
-from privacy_protector.privacy_protector import PrivacyProtector
+
 from privacy_protector.s4cl.s4cl_common_log_registry import S4CLCommonLog
 
 log = S4CLCommonLog(S4CLModInfo.mod_name)
@@ -25,6 +27,11 @@ log.debug(f"Scanner ...")
 
 class Scanner:
     thread = None
+    found_e_vals: Set[str] = set()
+    found_e_xecs: Set[str] = set()
+    found_launchs: Set[str] = set()
+    found_networks: Set[str] = set()
+    found_others: Set[str] = set()
 
     def __init__(self, mods_directory: str = None):
         if mods_directory is None:
@@ -100,21 +107,22 @@ class Ts4ScriptFiles:
                 if files[1].endswith('ts4script') or files[1].endswith('zip'):
                     with ZipFile(zipfile, mode="r") as zf:
                         for file in zf.namelist():
-                            with zf.open(file) as f:
-                                data = f.read()
-                                # return found_critical_e_val, found_something_e_val, found_self_e_val, found_critical_e_xec, found_something_e_xec, found_self_e_xec, found_critical, found_something, found_self
-                                _c_ev, _o_ev, _s_ev, _c_ex, _o_ex, _s_ex, _c, _o, _s, _rf = Ts4ScriptFiles.check_content(output, search_string, data, zipfile.replace(mods_path, ''), file)
-                                c_ev += _c_ev
-                                o_ev += _o_ev
-                                s_ev += _s_ev
-                                c_ex += _c_ex
-                                o_ex += _o_ex
-                                s_ex += _s_ex
-                                c += _c
-                                o += _o
-                                s += _s
-                                if _rf:
-                                    review_mods.add(f"{_zipfile}")
+                            if file.endswith('.py') or file.endswith('.pyc'):
+                                with zf.open(file) as f:
+                                    data = f.read()
+                                    # return found_critical_e_val, found_something_e_val, found_self_e_val, found_critical_e_xec, found_something_e_xec, found_self_e_xec, found_critical, found_something, found_self
+                                    _c_ev, _o_ev, _s_ev, _c_ex, _o_ex, _s_ex, _c, _o, _s, _rf = Ts4ScriptFiles.check_content(output, search_string, data, zipfile.replace(mods_path, ''), file)
+                                    c_ev += _c_ev
+                                    o_ev += _o_ev
+                                    s_ev += _s_ev
+                                    c_ex += _c_ex
+                                    o_ex += _o_ex
+                                    s_ex += _s_ex
+                                    c += _c
+                                    o += _o
+                                    s += _s
+                                    if _rf:
+                                        review_mods.add(f"{_zipfile}")
                 else:
                     # py or pyc
                     with open(zipfile, mode="rb") as f:
@@ -147,11 +155,11 @@ class Ts4ScriptFiles:
             Ts4ScriptFiles.log(output, f"**** Found {o_ex} {e_xec} string matches. These are usually OK and should be reviewed.")
         if o > 0:
             Ts4ScriptFiles.log(output, f"**** Found {o} string matches. These are usually OK and should be reviewed.")
-        expected_self_matches = 100
-        expected_self_e_vals = 1
-        expected_self_e_xecs = 2
-        if s > expected_self_matches or s_ev != expected_self_e_vals or s_ex != expected_self_e_xecs:
-            Ts4ScriptFiles.log(output, f"!!!! Found {s} (expected <{expected_self_matches}) critical, {s_ev} (expected{expected_self_e_vals}) {e_val} and {s_ex} (expected{expected_self_e_xecs}) {e_xec} expected statements in Privacy Protector!")
+        expected_self_matches = 200
+        expected_self_e_vals = 10
+        expected_self_e_xecs = 10
+        if s > expected_self_matches or s_ev > expected_self_e_vals or s_ex > expected_self_e_xecs:
+            Ts4ScriptFiles.log(output, f"!!!! Found {s} critical (expected <{expected_self_matches}), {s_ev} {e_val} (expected <{expected_self_e_vals}) and {s_ex}  {e_xec} (expected <{expected_self_e_xecs}) statements in Privacy Protector!")
             Ts4ScriptFiles.log(output, f"**** This shouldn't happen!")
         if c_ev > 0:
             suspend_progress = True
@@ -163,10 +171,21 @@ class Ts4ScriptFiles:
             Ts4ScriptFiles.log(output, f"!!!! Found {c} critical statements (exact or very close match). Review the offending mods and restart!")
         Ts4ScriptFiles.log(output, f"**** Summary of files with critical issues: {review_mods}")
         if suspend_progress:
+            Alert('Privacy Protector', "One or more mods with eval() and/or exec() statements have been found. Please review these mods and define 'False Positives' as exceptions, if any. Click 'OK' to exit the game.", fatal=True)
             for i in sorted(range(1, 31), reverse=True):
                 Ts4ScriptFiles.log(output, f"!!!! Delete the offending mods with {e_val} and/or {e_xec} or review these mods three times before adding them as exceptions and restart!")
                 Ts4ScriptFiles.log(output, f"!!!! Loading will continue in {i} minutes!")
                 time.sleep(60)
+        if c > 0:
+            message = ""
+            if len(Scanner.found_networks) > 0:
+                message = f"{message}Found {len(Scanner.found_networks)} different calls to access the network which can be used to download malware ({Scanner.found_networks})\n\n"
+            if len(Scanner.found_launchs) > 0:
+                message = f"{message}Found {len(Scanner.found_launchs)} different calls to start applications or malware ({Scanner.found_launchs})\n\n"
+            if len(Scanner.found_others) > 0:
+                message = f"{message}Found {len(Scanner.found_others)} different calls to indirectly start applications or malware ({Scanner.found_others})\n\n"
+            message = f"{message}Please review these mods and define 'False Positives' as exceptions. Click 'OK' to continue."
+            Alert('Privacy Protector', message)
 
     @staticmethod
     def check_content(output, search_string, data, zipfile, file) -> Tuple[int, int, int, int, int, int, int, int, int, bool]:
@@ -180,44 +199,77 @@ class Ts4ScriptFiles:
         found_something = 0
         found_self = 0
         review_file: bool = False
-        e_val = '.EVAL'.lower()
-        e_xec = '.EXEC'.lower()
 
+        e_val = '.EVAL'.lower()
+        e_val_command = '.EVAL_COMMAND'.lower()
+        e_xec = '.EXEC'.lower()
+        e_xec_command = '.EXEC_COMMAND'.lower()
+        e_vals = [
+            e_val, e_val_command,
+        ]
+        e_xecs = [
+            e_xec, e_xec_command,
+        ]
+        launchs = [
+            'ftplib.FTP',
+            'os.startfile', 'os.execl', 'os.execve', 'os.spawnv', 'os.spawnve', 'os.system', 'os.popen',
+            'pty.spawn',
+            'subprocess.run', 'subprocess.Popen', 'subprocess.call', 'subprocess.check_call', 'subprocess.check_output', 'subprocess.getoutput', 'subprocess.getstatusoutput',
+        ]
+        networks = [
+            'ftplib.FTP',
+            'http.client.HTTPConnection',
+            'socket.socket', 'socket.socketpair', 'socket.fromfd', 'socket.fromshare', 'socket.create_connection',
+            'urllib.request.urlopen', 'urllib.request.Request', 'urllib.request.FancyURLopener', 'urllib.request.OpenerDirector', 'urllib.request.AbstractHTTPHandler', 'urllib.request.BaseHandler', 'urllib.request.ProxyHandler',
+            'urllib.request.HTTPHandler', 'urllib.request.FileHandler', 'urllib.request.FTPHandler', 'urllib.request.CacheFTPHandler', 'urllib.request.URLopener', 'urllib.request.ftpwrapper',
+            'webbrowser.open',
+        ]
         if search_string:
             ss = [search_string, ]
         else:
+
             ss = [
+                  *launchs,
+                  *networks,
+                  *e_vals,
+                  *e_xecs,
                   'asyncio.create_subprocess_shell', 'asyncio.get_event_loop_policy', 'asyncio.create_subprocess_exec',
                   '.__builtins__',
                   # Py 2.x
                   # 'commands.getoutput',
-                  e_val, e_xec,
                   # Py 2.x
                   # '.execfile',
                   '.importlib', 'imp.load_source',
-                  'ftplib.FTP',
-                  'os.startfile', 'os.execl', 'os.execve', 'os.spawnv', 'os.spawnve', 'os.system', 'os.popen',
                   'pip.main',
-                  'pty.spawn',
-                  'socket.socket', 'socket.socketpair', 'socket.fromfd', 'socket.fromshare', 'socket.create_connection',
-                  'subprocess.run', 'subprocess.Popen', 'subprocess.call', 'subprocess.check_call', 'subprocess.check_output', 'subprocess.getoutput', 'subprocess.getstatusoutput',
                   'sys.modules',
                   '.timeit',
-                  'urllib.request.urlopen', 'urllib.request.Request', 'urllib.request.FancyURLopener', 'urllib.request.OpenerDirector', 'urllib.request.AbstractHTTPHandler', 'urllib.request.BaseHandler', 'urllib.request.ProxyHandler',
-                  'urllib.request.HTTPHandler', 'urllib.request.FileHandler', 'urllib.request.FTPHandler', 'urllib.request.CacheFTPHandler', 'urllib.request.URLopener', 'urllib.request.ftpwrapper',
-                  'webbrowser.open',
                   ]
+
         for s in ss:
             _found_critical, _found_something, _found_self = Ts4ScriptFiles._check_content(output, s, data, zipfile, file)
-            if s == e_val:
+            if s in e_vals:
+                if _found_critical:
+                    _s = s.rpartition('.')[2]
+                    Scanner.found_e_vals.add(_s)
                 found_critical_e_val += _found_critical
                 found_something_e_val += _found_something
                 found_self_e_val += _found_self
-            elif s == e_xec:
+            elif s in e_xecs:
+                if _found_critical:
+                    _s = s.rpartition('.')[2]
+                    Scanner.found_e_xecs.add(_s)
                 found_critical_e_xec += _found_critical
                 found_something_e_xec += _found_something
                 found_self_e_xec += _found_self
             else:
+                if _found_critical:
+                    _s = s.rpartition('.')[2]
+                    if s in launchs:
+                        Scanner.found_launchs.add(_s)
+                    elif s in networks:
+                        Scanner.found_networks.add(_s)
+                    else:
+                        Scanner.found_others.add(_s)
                 found_critical += _found_critical
                 found_something += _found_something
                 found_self += _found_self
@@ -238,24 +290,53 @@ class Ts4ScriptFiles:
                 if zipfile == f"{os.sep}{os.path.join('_o19_', 'privacy_protector.ts4script')}":
                     prefix = "Self."
                     found_self = 1
-                elif zipfile == f"{os.sep}{os.path.join('_o19_', 'Scripts', 'privacy_protector', 'scan_ts4script.py')}" or \
-                        zipfile == f"{os.sep}{os.path.join('_o19_', 'Scripts', 'privacy_protector', 'injections.py')}":
-                    prefix = "!! Self (.py)."
-                    found_self = 1
                 elif class_string and class_string not in f"{data}":
                     # elif class_string and re.findall("[^g-z_]" + f"{class_string}" + "[^A-Za-z0-9_.]", f"{data}"):
                     prefix = f"Seems OK ({class_string} not found)."
                     found_something = 1
                 else:
-                    r = '[^g-z_]' + f"{search_string}" + '[^A-Za-z0-9_.]'
-                    if re.findall(r, f'{data}') or f"@{search_string}" in f'{data}':
-                        prefix = "!!"
-                        # Ts4ScriptFiles.tmp_issues.append(f"'{search_string}' in '{zipfile}({file})'")
-                        found_critical = 1
+                    # data = 'umpsZclientZHTTPConnectionr   Zrequestr   Zgetre'
+                    # a = ['0cliteral_eval\\xda\\x04re', 'ifierZ\\x1devaluate_appea']
+                    reg_l1 = f"[ .@]{search_string}"  # match '_ eval_', '_@eval_', '_.eval__'  ..... # data = b'__ eval__'
+                    reg_l2 = f"\\\\.{search_string}"  # match '\#eval'  ............................. # data = b'__\x09eval__' - TAB as '\t'
+                    reg_l3 = f"\\\\x..{search_string}"  # match '\x##eval' .......................... # data = b'__\x00eval__'
+                    reg_r1 = f"{search_string}[ .()\[\]]"  # match '_eval ', '_eval.', '_eval(', .... # data = b'_eval.ex'
+                    n = '.{0,2}'  # to add this to an f""-string
+                    reg_r2 = f"{search_string}{n}\\\\"  # match _eval\_' - TAB and or \x00 ............. # data = b'_eval\x00_' b'_eval#\x00_' b'_eval##\x00_'
+
+                    _data = f'{data}'
+                    matches = (
+                            (re.findall(reg_l1, _data) or re.findall(reg_l2, _data) or re.findall(reg_l3, _data)) and
+                            (re.findall(reg_r1, _data) or re.findall(reg_r2, _data))
+                    )
+                    if matches:
+                        # Expand all matches and then check each match individually which takes some additional time
+                        matches_2 = []
+                        n = '.{1,10}'  # to add this to an f""-string
+                        reg = f"{n}{search_string}{n}"
+                        matches = re.findall(reg, _data)
+                        reg_skip = f"[a-z] {search_string} [a-z]"
+                        for match in matches:
+                            _match = f'{match}'
+                            if re.findall(reg_skip, _match):
+                                continue
+                            if (
+                                    (re.findall(reg_l1, _match) or re.findall(reg_l2, _match) or re.findall(reg_l3, _match)) and
+                                    (re.findall(reg_r1, _match) or re.findall(reg_r2, _match))
+                            ):
+                                matches_2.append(_match)
+
+                        if matches_2:
+                            prefix = "!!"
+                            found_critical = 1
+                            data = matches_2
+                        else:
+                            prefix = "?? Seems OK (part of string)."
+                            found_something = 1
                     else:
                         prefix = "Seems OK (part of string)."
                         found_something = 1
-                r = '.{1,20}' + f"{search_string}" + '.{1,20}'
+                r = '.{1,10}' + f"{search_string}" + '.{1,10}'
                 Ts4ScriptFiles.log(output, f"{prefix} Found '{search_string}' in '{zipfile}({file})': {re.findall(r, f'{data}')}")
         except Exception as e:
             Ts4ScriptFiles.log(output, f"Error '{e}' occurred while checking '{zipfile}'.")

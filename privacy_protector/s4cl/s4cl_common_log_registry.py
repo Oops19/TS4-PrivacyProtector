@@ -15,7 +15,7 @@ import os
 from datetime import datetime
 
 
-class S4CLCommonLog():
+class S4CLCommonLog:
     def __init__(self, mod_name: str):
         try:
             log_path = os.path.join(os.path.dirname(os.path.realpath(__file__)).partition(f"{os.sep}Mods{os.sep}")[0], 'mod_logs')

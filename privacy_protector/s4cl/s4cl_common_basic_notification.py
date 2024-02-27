@@ -45,7 +45,7 @@ class S4CLCommonLocalizedStringColor(S4CLCommonInt):
 
 class S4CLCommonLocalizationUtils:
     @staticmethod
-    def create_localized_string(identifier: Union[int, str, LocalizedString, S4CLCommonStringId, S4CLCommonLocalizedStringSeparator], tokens: Iterator[Any]=(), localize_tokens: bool=True, text_color: S4CLCommonLocalizedStringColor=S4CLCommonLocalizedStringColor.DEFAULT) -> LocalizedString:
+    def create_localized_string(identifier: Union[int, str, LocalizedString, S4CLCommonStringId, S4CLCommonLocalizedStringSeparator], tokens: Iterator[Any] = (), localize_tokens: bool = True, text_color: S4CLCommonLocalizedStringColor = S4CLCommonLocalizedStringColor.DEFAULT) -> LocalizedString:
         if identifier is None:
             return S4CLCommonLocalizationUtils.create_localized_string(S4CLCommonStringId.STRING_NOT_FOUND_WITH_IDENTIFIER, tokens=('None',), text_color=text_color)
         if localize_tokens:
@@ -82,7 +82,7 @@ class S4CLCommonLocalizationUtils:
         return tuple(new_tokens)
 
     @staticmethod
-    def colorize(localized_string: LocalizedString, text_color: S4CLCommonLocalizedStringColor=S4CLCommonLocalizedStringColor.DEFAULT) -> LocalizedString:
+    def colorize(localized_string: LocalizedString, text_color: S4CLCommonLocalizedStringColor = S4CLCommonLocalizedStringColor.DEFAULT) -> LocalizedString:
         if text_color == S4CLCommonLocalizedStringColor.DEFAULT:
             return localized_string
         if not hasattr(text_color, 'value'):
@@ -99,12 +99,12 @@ class S4CLCommonBasicNotification:
         self,
         title_identifier: Union[int, str, LocalizedString, S4CLCommonStringId],
         description_identifier: Union[int, str, LocalizedString, S4CLCommonStringId],
-        title_tokens: Iterator[Any]=(),
-        description_tokens: Iterator[Any]=(),
-        urgency: UiDialogNotification.UiDialogNotificationUrgency=UiDialogNotification.UiDialogNotificationUrgency.DEFAULT,
-        information_level: UiDialogNotification.UiDialogNotificationLevel=UiDialogNotification.UiDialogNotificationLevel.SIM,
-        expand_behavior: UiDialogNotification.UiDialogNotificationExpandBehavior=UiDialogNotification.UiDialogNotificationExpandBehavior.USER_SETTING,
-        ui_responses: Tuple[UiDialogResponse]=()
+        title_tokens: Iterator[Any] = (),
+        description_tokens: Iterator[Any] = (),
+        urgency: UiDialogNotification.UiDialogNotificationUrgency = UiDialogNotification.UiDialogNotificationUrgency.DEFAULT,
+        information_level: UiDialogNotification.UiDialogNotificationLevel = UiDialogNotification.UiDialogNotificationLevel.SIM,
+        expand_behavior: UiDialogNotification.UiDialogNotificationExpandBehavior = UiDialogNotification.UiDialogNotificationExpandBehavior.USER_SETTING,
+        ui_responses: Tuple[UiDialogResponse] = ()
     ):
         self.title = S4CLCommonLocalizationUtils.create_localized_string(title_identifier, tokens=tuple(title_tokens))
         self.description = S4CLCommonLocalizationUtils.create_localized_string(description_identifier, tokens=tuple(description_tokens))
@@ -114,7 +114,7 @@ class S4CLCommonBasicNotification:
         self.expand_behavior = expand_behavior
         self.ui_responses = ui_responses
 
-    def show(self, icon: IconInfoData=None, secondary_icon: IconInfoData=None):
+    def show(self, icon: IconInfoData = None, secondary_icon: IconInfoData = None):
         _notification = self._create_dialog()
         if _notification is None:
             return
