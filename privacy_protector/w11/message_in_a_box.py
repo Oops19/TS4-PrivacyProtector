@@ -1,4 +1,4 @@
-import s4cl_ctypes
+import pp_ctypes
 
 
 class MessageInABox:
@@ -10,5 +10,5 @@ class MessageInABox:
         MB_TASKMODAL = 0x00002000
         MB_ICONSTOP = 0x00000010
         """
-        MessageBoxA = s4cl_ctypes.windll.user32.MessageBoxA
+        MessageBoxA = pp_ctypes.windll.user32.MessageBoxA
         MessageBoxA(hwnd, message.encode('UTF-8'), title.encode('UTF-8'), u_type)

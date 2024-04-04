@@ -171,7 +171,7 @@ class Ts4ScriptFiles:
             Ts4ScriptFiles.log(output, f"!!!! Found {c} critical statements (exact or very close match). Review the offending mods and restart!")
         Ts4ScriptFiles.log(output, f"**** Summary of files with critical issues: {review_mods}")
         if suspend_progress:
-            Alert('Privacy Protector', "One or more mods with eval() and/or exec() statements have been found. Please review these mods and define 'False Positives' as exceptions, if any. Click 'OK' to exit the game.", fatal=True)
+            Alert('Privacy Protector', "One or more mods with eval() and/or exec() statements have been found. Please review these mods and define delete the insecure mods or define them as exceptions if you love the risk. Click 'OK' to EXIT the game for your own safety.", fatal=True)
             for i in sorted(range(1, 31), reverse=True):
                 Ts4ScriptFiles.log(output, f"!!!! Delete the offending mods with {e_val} and/or {e_xec} or review these mods three times before adding them as exceptions and restart!")
                 Ts4ScriptFiles.log(output, f"!!!! Loading will continue in {i} minutes!")
@@ -184,7 +184,7 @@ class Ts4ScriptFiles:
                 message = f"{message}Found {len(Scanner.found_launchs)} different calls to start applications or malware ({Scanner.found_launchs})\n\n"
             if len(Scanner.found_others) > 0:
                 message = f"{message}Found {len(Scanner.found_others)} different calls to indirectly start applications or malware ({Scanner.found_others})\n\n"
-            message = f"{message}Please review these mods and define 'False Positives' as exceptions. Click 'OK' to continue."
+            message = f"{message}Please review these mods and define save mods as exceptions. Click 'OK' to continue."
             Alert('Privacy Protector', message)
 
     @staticmethod

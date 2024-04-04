@@ -1,5 +1,5 @@
 import sys
-from s4cl_ctypes import *
+from pp_ctypes import *
 
 _array_type = type(Array)
 

@@ -533,7 +533,7 @@ if _os.name == "nt": # COM stuff
             return 0 # S_OK
         return ccom.DllCanUnloadNow()
 
-from s4cl_ctypes._endian import BigEndianStructure, LittleEndianStructure
+from pp_ctypes._endian import BigEndianStructure, LittleEndianStructure
 
 # Fill in specifically-sized types
 c_int8 = c_byte

@@ -1,50 +1,50 @@
 # The most useful windows datatypes
-import s4cl_ctypes
+import pp_ctypes
 
-BYTE = s4cl_ctypes.c_byte
-WORD = s4cl_ctypes.c_ushort
-DWORD = s4cl_ctypes.c_ulong
+BYTE = pp_ctypes.c_byte
+WORD = pp_ctypes.c_ushort
+DWORD = pp_ctypes.c_ulong
 
 #UCHAR = s4cl_ctypes.c_uchar
-CHAR = s4cl_ctypes.c_char
-WCHAR = s4cl_ctypes.c_wchar
-UINT = s4cl_ctypes.c_uint
-INT = s4cl_ctypes.c_int
+CHAR = pp_ctypes.c_char
+WCHAR = pp_ctypes.c_wchar
+UINT = pp_ctypes.c_uint
+INT = pp_ctypes.c_int
 
-DOUBLE = s4cl_ctypes.c_double
-FLOAT = s4cl_ctypes.c_float
+DOUBLE = pp_ctypes.c_double
+FLOAT = pp_ctypes.c_float
 
 BOOLEAN = BYTE
-BOOL = s4cl_ctypes.c_long
+BOOL = pp_ctypes.c_long
 
-class VARIANT_BOOL(s4cl_ctypes._SimpleCData):
+class VARIANT_BOOL(pp_ctypes._SimpleCData):
     _type_ = "v"
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.value)
 
-ULONG = s4cl_ctypes.c_ulong
-LONG = s4cl_ctypes.c_long
+ULONG = pp_ctypes.c_ulong
+LONG = pp_ctypes.c_long
 
-USHORT = s4cl_ctypes.c_ushort
-SHORT = s4cl_ctypes.c_short
+USHORT = pp_ctypes.c_ushort
+SHORT = pp_ctypes.c_short
 
 # in the windows header files, these are structures.
-_LARGE_INTEGER = LARGE_INTEGER = s4cl_ctypes.c_longlong
-_ULARGE_INTEGER = ULARGE_INTEGER = s4cl_ctypes.c_ulonglong
+_LARGE_INTEGER = LARGE_INTEGER = pp_ctypes.c_longlong
+_ULARGE_INTEGER = ULARGE_INTEGER = pp_ctypes.c_ulonglong
 
-LPCOLESTR = LPOLESTR = OLESTR = s4cl_ctypes.c_wchar_p
-LPCWSTR = LPWSTR = s4cl_ctypes.c_wchar_p
-LPCSTR = LPSTR = s4cl_ctypes.c_char_p
-LPCVOID = LPVOID = s4cl_ctypes.c_void_p
+LPCOLESTR = LPOLESTR = OLESTR = pp_ctypes.c_wchar_p
+LPCWSTR = LPWSTR = pp_ctypes.c_wchar_p
+LPCSTR = LPSTR = pp_ctypes.c_char_p
+LPCVOID = LPVOID = pp_ctypes.c_void_p
 
 # WPARAM is defined as UINT_PTR (unsigned type)
 # LPARAM is defined as LONG_PTR (signed type)
-if s4cl_ctypes.sizeof(s4cl_ctypes.c_long) == s4cl_ctypes.sizeof(s4cl_ctypes.c_void_p):
-    WPARAM = s4cl_ctypes.c_ulong
-    LPARAM = s4cl_ctypes.c_long
-elif s4cl_ctypes.sizeof(s4cl_ctypes.c_longlong) == s4cl_ctypes.sizeof(s4cl_ctypes.c_void_p):
-    WPARAM = s4cl_ctypes.c_ulonglong
-    LPARAM = s4cl_ctypes.c_longlong
+if pp_ctypes.sizeof(pp_ctypes.c_long) == pp_ctypes.sizeof(pp_ctypes.c_void_p):
+    WPARAM = pp_ctypes.c_ulong
+    LPARAM = pp_ctypes.c_long
+elif pp_ctypes.sizeof(pp_ctypes.c_longlong) == pp_ctypes.sizeof(pp_ctypes.c_void_p):
+    WPARAM = pp_ctypes.c_ulonglong
+    LPARAM = pp_ctypes.c_longlong
 
 ATOM = WORD
 LANGID = WORD
@@ -57,7 +57,7 @@ LCID = DWORD
 
 ################################################################
 # HANDLE types
-HANDLE = s4cl_ctypes.c_void_p # in the header files: void *
+HANDLE = pp_ctypes.c_void_p # in the header files: void *
 
 HACCEL = HANDLE
 HBITMAP = HANDLE
@@ -94,30 +94,30 @@ SERVICE_STATUS_HANDLE = HANDLE
 ################################################################
 # Some important structure definitions
 
-class RECT(s4cl_ctypes.Structure):
+class RECT(pp_ctypes.Structure):
     _fields_ = [("left", LONG),
                 ("top", LONG),
                 ("right", LONG),
                 ("bottom", LONG)]
 tagRECT = _RECTL = RECTL = RECT
 
-class _SMALL_RECT(s4cl_ctypes.Structure):
+class _SMALL_RECT(pp_ctypes.Structure):
     _fields_ = [('Left', SHORT),
                 ('Top', SHORT),
                 ('Right', SHORT),
                 ('Bottom', SHORT)]
 SMALL_RECT = _SMALL_RECT
 
-class _COORD(s4cl_ctypes.Structure):
+class _COORD(pp_ctypes.Structure):
     _fields_ = [('X', SHORT),
                 ('Y', SHORT)]
 
-class POINT(s4cl_ctypes.Structure):
+class POINT(pp_ctypes.Structure):
     _fields_ = [("x", LONG),
                 ("y", LONG)]
 tagPOINT = _POINTL = POINTL = POINT
 
-class SIZE(s4cl_ctypes.Structure):
+class SIZE(pp_ctypes.Structure):
     _fields_ = [("cx", LONG),
                 ("cy", LONG)]
 tagSIZE = SIZEL = SIZE
@@ -125,12 +125,12 @@ tagSIZE = SIZEL = SIZE
 def RGB(red, green, blue):
     return red + (green << 8) + (blue << 16)
 
-class FILETIME(s4cl_ctypes.Structure):
+class FILETIME(pp_ctypes.Structure):
     _fields_ = [("dwLowDateTime", DWORD),
                 ("dwHighDateTime", DWORD)]
 _FILETIME = FILETIME
 
-class MSG(s4cl_ctypes.Structure):
+class MSG(pp_ctypes.Structure):
     _fields_ = [("hWnd", HWND),
                 ("message", UINT),
                 ("wParam", WPARAM),
@@ -140,7 +140,7 @@ class MSG(s4cl_ctypes.Structure):
 tagMSG = MSG
 MAX_PATH = 260
 
-class WIN32_FIND_DATAA(s4cl_ctypes.Structure):
+class WIN32_FIND_DATAA(pp_ctypes.Structure):
     _fields_ = [("dwFileAttributes", DWORD),
                 ("ftCreationTime", FILETIME),
                 ("ftLastAccessTime", FILETIME),
@@ -152,7 +152,7 @@ class WIN32_FIND_DATAA(s4cl_ctypes.Structure):
                 ("cFileName", CHAR * MAX_PATH),
                 ("cAlternateFileName", CHAR * 14)]
 
-class WIN32_FIND_DATAW(s4cl_ctypes.Structure):
+class WIN32_FIND_DATAW(pp_ctypes.Structure):
     _fields_ = [("dwFileAttributes", DWORD),
                 ("ftCreationTime", FILETIME),
                 ("ftLastAccessTime", FILETIME),
@@ -167,36 +167,36 @@ class WIN32_FIND_DATAW(s4cl_ctypes.Structure):
 ################################################################
 # Pointer types
 
-LPBOOL = PBOOL = s4cl_ctypes.POINTER(BOOL)
-PBOOLEAN = s4cl_ctypes.POINTER(BOOLEAN)
-LPBYTE = PBYTE = s4cl_ctypes.POINTER(BYTE)
-PCHAR = s4cl_ctypes.POINTER(CHAR)
-LPCOLORREF = s4cl_ctypes.POINTER(COLORREF)
-LPDWORD = PDWORD = s4cl_ctypes.POINTER(DWORD)
-LPFILETIME = PFILETIME = s4cl_ctypes.POINTER(FILETIME)
-PFLOAT = s4cl_ctypes.POINTER(FLOAT)
-LPHANDLE = PHANDLE = s4cl_ctypes.POINTER(HANDLE)
-PHKEY = s4cl_ctypes.POINTER(HKEY)
-LPHKL = s4cl_ctypes.POINTER(HKL)
-LPINT = PINT = s4cl_ctypes.POINTER(INT)
-PLARGE_INTEGER = s4cl_ctypes.POINTER(LARGE_INTEGER)
-PLCID = s4cl_ctypes.POINTER(LCID)
-LPLONG = PLONG = s4cl_ctypes.POINTER(LONG)
-LPMSG = PMSG = s4cl_ctypes.POINTER(MSG)
-LPPOINT = PPOINT = s4cl_ctypes.POINTER(POINT)
-PPOINTL = s4cl_ctypes.POINTER(POINTL)
-LPRECT = PRECT = s4cl_ctypes.POINTER(RECT)
-LPRECTL = PRECTL = s4cl_ctypes.POINTER(RECTL)
-LPSC_HANDLE = s4cl_ctypes.POINTER(SC_HANDLE)
-PSHORT = s4cl_ctypes.POINTER(SHORT)
-LPSIZE = PSIZE = s4cl_ctypes.POINTER(SIZE)
-LPSIZEL = PSIZEL = s4cl_ctypes.POINTER(SIZEL)
-PSMALL_RECT = s4cl_ctypes.POINTER(SMALL_RECT)
-LPUINT = PUINT = s4cl_ctypes.POINTER(UINT)
-PULARGE_INTEGER = s4cl_ctypes.POINTER(ULARGE_INTEGER)
-PULONG = s4cl_ctypes.POINTER(ULONG)
-PUSHORT = s4cl_ctypes.POINTER(USHORT)
-PWCHAR = s4cl_ctypes.POINTER(WCHAR)
-LPWIN32_FIND_DATAA = PWIN32_FIND_DATAA = s4cl_ctypes.POINTER(WIN32_FIND_DATAA)
-LPWIN32_FIND_DATAW = PWIN32_FIND_DATAW = s4cl_ctypes.POINTER(WIN32_FIND_DATAW)
-LPWORD = PWORD = s4cl_ctypes.POINTER(WORD)
+LPBOOL = PBOOL = pp_ctypes.POINTER(BOOL)
+PBOOLEAN = pp_ctypes.POINTER(BOOLEAN)
+LPBYTE = PBYTE = pp_ctypes.POINTER(BYTE)
+PCHAR = pp_ctypes.POINTER(CHAR)
+LPCOLORREF = pp_ctypes.POINTER(COLORREF)
+LPDWORD = PDWORD = pp_ctypes.POINTER(DWORD)
+LPFILETIME = PFILETIME = pp_ctypes.POINTER(FILETIME)
+PFLOAT = pp_ctypes.POINTER(FLOAT)
+LPHANDLE = PHANDLE = pp_ctypes.POINTER(HANDLE)
+PHKEY = pp_ctypes.POINTER(HKEY)
+LPHKL = pp_ctypes.POINTER(HKL)
+LPINT = PINT = pp_ctypes.POINTER(INT)
+PLARGE_INTEGER = pp_ctypes.POINTER(LARGE_INTEGER)
+PLCID = pp_ctypes.POINTER(LCID)
+LPLONG = PLONG = pp_ctypes.POINTER(LONG)
+LPMSG = PMSG = pp_ctypes.POINTER(MSG)
+LPPOINT = PPOINT = pp_ctypes.POINTER(POINT)
+PPOINTL = pp_ctypes.POINTER(POINTL)
+LPRECT = PRECT = pp_ctypes.POINTER(RECT)
+LPRECTL = PRECTL = pp_ctypes.POINTER(RECTL)
+LPSC_HANDLE = pp_ctypes.POINTER(SC_HANDLE)
+PSHORT = pp_ctypes.POINTER(SHORT)
+LPSIZE = PSIZE = pp_ctypes.POINTER(SIZE)
+LPSIZEL = PSIZEL = pp_ctypes.POINTER(SIZEL)
+PSMALL_RECT = pp_ctypes.POINTER(SMALL_RECT)
+LPUINT = PUINT = pp_ctypes.POINTER(UINT)
+PULARGE_INTEGER = pp_ctypes.POINTER(ULARGE_INTEGER)
+PULONG = pp_ctypes.POINTER(ULONG)
+PUSHORT = pp_ctypes.POINTER(USHORT)
+PWCHAR = pp_ctypes.POINTER(WCHAR)
+LPWIN32_FIND_DATAA = PWIN32_FIND_DATAA = pp_ctypes.POINTER(WIN32_FIND_DATAA)
+LPWIN32_FIND_DATAW = PWIN32_FIND_DATAW = pp_ctypes.POINTER(WIN32_FIND_DATAW)
+LPWORD = PWORD = pp_ctypes.POINTER(WORD)

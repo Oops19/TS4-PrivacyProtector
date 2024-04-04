@@ -3,8 +3,8 @@ dyld emulation
 """
 
 import os
-from s4cl_ctypes.macholib.framework import framework_info
-from s4cl_ctypes.macholib.dylib import dylib_info
+from pp_ctypes.macholib.framework import framework_info
+from pp_ctypes.macholib.dylib import dylib_info
 from itertools import *
 
 __all__ = [

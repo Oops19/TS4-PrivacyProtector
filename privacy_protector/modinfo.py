@@ -136,7 +136,7 @@ class ModInfo(S4CLCommonModInfo):
 
     @property
     def _version(self) -> str:
-        return '1.9.0'
+        return '1.9.1'
 
 
 class S4CLModInfo:
@@ -148,6 +148,8 @@ class S4CLModInfo:
 
 
 '''
+v1.9.1
+    Fixed text in Popup Message
 v1.9.0
     Added Popup Message & Kill-Switch
     Improved scanning pattern to list less matches

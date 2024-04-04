@@ -1,4 +1,4 @@
-import s4cl_ctypes
+import pp_ctypes
 from privacy_protector.w11.manage_hwnd import ManageHWND
 
 from privacy_protector.w11.message_in_a_box import MessageInABox
@@ -11,7 +11,7 @@ log = S4CLCommonLog(S4CLModInfo.mod_name)
 class Alert:
     def __init__(self, title: str, message: str, fatal: bool = False):
         try:
-            dwProcessID = s4cl_ctypes.windll.kernel32.GetCurrentProcessId()
+            dwProcessID = pp_ctypes.windll.kernel32.GetCurrentProcessId()
             # log.debug(f"hwnd dwProcessID {dwProcessID}")
             m = ManageHWND()
             windows = m.get_all_windows_from_process_id(dwProcessID)
@@ -33,11 +33,11 @@ class Alert:
             if fatal:
                 PROCESS_TERMINATE = 0x0001
                 FALSE = 0
-                dwProcessID = s4cl_ctypes.windll.kernel32.GetCurrentProcessId()
-                hProcess = s4cl_ctypes.windll.kernel32.OpenProcess(PROCESS_TERMINATE, FALSE, dwProcessID)
+                dwProcessID = pp_ctypes.windll.kernel32.GetCurrentProcessId()
+                hProcess = pp_ctypes.windll.kernel32.OpenProcess(PROCESS_TERMINATE, FALSE, dwProcessID)
                 if hProcess != 0:
-                    s4cl_ctypes.windll.kernel32.TerminateProcess(hProcess, -1)
-                    s4cl_ctypes.windll.kernel32.CloseHandle(hProcess)
+                    pp_ctypes.windll.kernel32.TerminateProcess(hProcess, -1)
+                    pp_ctypes.windll.kernel32.CloseHandle(hProcess)
 
         except Exception as e:
             log.error(f"hwnd err {e}")

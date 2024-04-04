@@ -68,7 +68,7 @@ if os.name == "nt":
         return None
 
 elif os.name == "posix" and sys.platform == "darwin":
-    from s4cl_ctypes.macholib.dyld import dyld_find as _dyld_find
+    from pp_ctypes.macholib.dyld import dyld_find as _dyld_find
     def find_library(name):
         possible = ['lib%s.dylib' % name,
                     '%s.dylib' % name,
@@ -87,7 +87,7 @@ elif sys.platform.startswith("aix"):
     # AIX style uses an archive (suffix .a) with members (e.g., shr.o, libssl.so)
     # see issue#26439 and _aix.py for more details
 
-    from s4cl_ctypes._aix import find_library
+    from pp_ctypes._aix import find_library
 
 elif os.name == "posix":
     # Andreas Degert's find functions, using gcc, /sbin/ldconfig, objdump
@@ -315,7 +315,7 @@ elif os.name == "posix":
 # test code
 
 def test():
-    from s4cl_ctypes import cdll
+    from pp_ctypes import cdll
     if os.name == "nt":
         print(cdll.msvcrt)
         print(cdll.load("msvcrt"))
@@ -335,7 +335,7 @@ def test():
             print(cdll.LoadLibrary("System.framework/System"))
         # issue-26439 - fix broken test call for AIX
         elif sys.platform.startswith("aix"):
-            from s4cl_ctypes import CDLL
+            from pp_ctypes import CDLL
             if sys.maxsize < 2**32:
                 print(f"Using CDLL(name, os.RTLD_MEMBER): {CDLL('libc.a(shr.o)', os.RTLD_MEMBER)}")
                 print(f"Using cdll.LoadLibrary(): {cdll.LoadLibrary('libc.a(shr.o)')}")
