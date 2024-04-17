@@ -168,23 +168,23 @@ class Ts4ScriptFiles:
             suspend_progress = True
             Ts4ScriptFiles.log(output, f"!!!! Found {c_ex} {e_xec} statements. Delete the offending mods and restart!")
         if c > 0:
-            Ts4ScriptFiles.log(output, f"!!!! Found {c} critical statements (exact or very close match). Review the offending mods and restart!")
+            Ts4ScriptFiles.log(output, f"!!!! Found {c} strings closely matching critical statements. Review the offending mods and restart!")
         Ts4ScriptFiles.log(output, f"**** Summary of files with critical issues: {review_mods}")
         if suspend_progress:
             Alert('Privacy Protector', "One or more mods with eval() and/or exec() statements have been found. Please review these mods and define delete the insecure mods or define them as exceptions if you love the risk. Click 'OK' to EXIT the game for your own safety.", fatal=True)
             for i in sorted(range(1, 31), reverse=True):
-                Ts4ScriptFiles.log(output, f"!!!! Delete the offending mods with {e_val} and/or {e_xec} or review these mods three times before adding them as exceptions and restart!")
+                Ts4ScriptFiles.log(output, f"!!!! Delete the offending mods with {e_val} and/or {e_xec}!")
                 Ts4ScriptFiles.log(output, f"!!!! Loading will continue in {i} minutes!")
                 time.sleep(60)
         if c > 0:
-            message = ""
+            message = f"Review these mods: {_zipfile}\n\n"
             if len(Scanner.found_networks) > 0:
-                message = f"{message}Found {len(Scanner.found_networks)} different calls to access the network which can be used to download malware ({Scanner.found_networks})\n\n"
+                message = f"{message}Found {len(Scanner.found_networks)} possible calls to access the network which can be used to download malware ({Scanner.found_networks})\n\n"
             if len(Scanner.found_launchs) > 0:
-                message = f"{message}Found {len(Scanner.found_launchs)} different calls to start applications or malware ({Scanner.found_launchs})\n\n"
+                message = f"{message}Found {len(Scanner.found_launchs)} possible calls to start applications or malware ({Scanner.found_launchs})\n\n"
             if len(Scanner.found_others) > 0:
-                message = f"{message}Found {len(Scanner.found_others)} different calls to indirectly start applications or malware ({Scanner.found_others})\n\n"
-            message = f"{message}Please review these mods and define save mods as exceptions. Click 'OK' to continue."
+                message = f"{message}Found {len(Scanner.found_others)} possible calls to indirectly start applications or malware ({Scanner.found_others})\n\n"
+            message = f"{message}Please review these mods and define secure mods as exceptions. Click 'OK' to continue."
             Alert('Privacy Protector', message)
 
     @staticmethod
