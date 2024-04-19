@@ -239,7 +239,7 @@ It is expected to be compatible with many upcoming releases of TS4, S4CL and TS4
 
 ## Dependencies
 * [The Sims 4](https://www.ea.com/games/the-sims/the-sims-4)
-* [This Mod](./releases/latest)
+* [This Mod](../../releases/latest)
 
 If not installed download and install TS4 and these mods.
 All are available for free.
