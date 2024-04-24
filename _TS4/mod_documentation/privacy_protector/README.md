@@ -234,12 +234,13 @@ This mod is still starting up fine while I'm looking for a way to avoid this exc
 # Addendum
 
 ## Game compatibility
-This mod has been tested with `The Sims 4` 1.105.345, S4CL 3.3, TS4Lib 0.2.0 (2024-02).
+This mod has been tested with `The Sims 4` 1.106.148, S4CL 3.3, TS4Lib 0.2.0 (2024-02).
 It is expected to be compatible with many upcoming releases of TS4, S4CL and TS4Lib.
 
 ## Dependencies
+Download the ZIP file, not the sources.
+* [This Mod](../../releases/latest)
 * [The Sims 4](https://www.ea.com/games/the-sims/the-sims-4)
-* [This Mod](./releases/latest)
 
 If not installed download and install TS4 and these mods.
 All are available for free.
