@@ -111,6 +111,14 @@ class S4CLCommonModInfo(S4CLCommonService):
         return '1.0'
 
 
+class S4CLModInfo:
+    mod_name = 'Privacy-Protector'
+
+    @staticmethod
+    def get_identity() -> str:
+        return S4CLModInfo.mod_name
+
+
 class ModInfo(S4CLCommonModInfo):
     _FILE_PATH: str = str(__file__)
 
@@ -136,18 +144,12 @@ class ModInfo(S4CLCommonModInfo):
 
     @property
     def _version(self) -> str:
-        return '1.9.2'
+        return '1.9.3'
 
 
-class S4CLModInfo:
-    mod_name = 'Privacy-Protector'
-
-    @staticmethod
-    def get_identity() -> str:
-        return S4CLModInfo.mod_name
-
-
-'''
+r'''
+v.1.9.3
+    Tested with TS4 v1.107
 v1.9.2
     Show mods in Popup Message
 v1.9.1

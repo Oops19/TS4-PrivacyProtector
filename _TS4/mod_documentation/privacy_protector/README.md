@@ -2,6 +2,8 @@
 This mod includes reviewed S4CL code to avoid and dependency to other mods.
 
 ## Features
+It blocks, in contrary to ModGuard, also most mods which can be found on NSFW pages.
+
 ### Blocking Features
 This mods blocks some Python calls which compromise security.
 
@@ -18,7 +20,6 @@ Python-based ransomware is available and it works fine.
 Without the ability to connect to the internet there should be at least no data breach.  
 
 `sys.modules()` is needed by TS4 itself and file access is needed by mods to write log files.
-
 
 ### Logging Features
 This mod supports scanning of script mods.
@@ -56,7 +57,6 @@ Mod creators have no legitimate reason to collect data like
 Other mods also download and execute malware.
 
 All mods can be considered as UGC and the EA TOS https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/ applies:
-
 
 #### When you access or use an EA Service, you agree that you will not:
 * Use any software or program that damages, interferes with or disrupts an EA Service or another's computer or property, such as denial of service attacks, spamming, hacking, or uploading computer viruses, worms, Trojan horses, cancelbots, spyware, corrupted files and time bombs.
@@ -234,7 +234,7 @@ This mod is still starting up fine while I'm looking for a way to avoid this exc
 # Addendum
 
 ## Game compatibility
-This mod has been tested with `The Sims 4` 1.106.148, S4CL 3.3, TS4Lib 0.2.0 (2024-02).
+This mod has been tested with `The Sims 4` 1.107.112, S4CL 3.4, TS4Lib 0.3.20 (2024-05).
 It is expected to be compatible with many upcoming releases of TS4, S4CL and TS4Lib.
 
 ## Dependencies
