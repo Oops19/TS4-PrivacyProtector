@@ -148,7 +148,7 @@ class ModInfo(S4CLCommonModInfo):
 
 
 r'''
-v.1.9.3
+v1.9.3
     Tested with TS4 v1.107
 v1.9.2
     Show mods in Popup Message
