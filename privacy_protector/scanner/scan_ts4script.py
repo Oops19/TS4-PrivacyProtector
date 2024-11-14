@@ -29,9 +29,9 @@ class Scanner:
     thread = None
     found_e_vals: Set[str] = set()
     found_e_xecs: Set[str] = set()
-    found_launchs: Set[str] = set()
-    found_networks: Set[str] = set()
-    found_others: Set[str] = set()
+    found_launchs: List[str] = set()
+    found_networks: List[str] = set()
+    found_others: List[str] = set()
 
     def __init__(self, mods_directory: str = None):
         if mods_directory is None:
@@ -103,7 +103,8 @@ class Ts4ScriptFiles:
             for files in file_list:
                 zipfile = os.path.join(files[0], files[1])
                 _zipfile = zipfile.replace(mods_path, '')
-                Ts4ScriptFiles.log(output, f"*Scanning '{_zipfile}")
+                Ts4ScriptFiles.log(output, f"")
+                Ts4ScriptFiles.log(output, f"*Scanning '{_zipfile}'")
                 if files[1].endswith('ts4script') or files[1].endswith('zip'):
                     with ZipFile(zipfile, mode="r") as zf:
                         for file in zf.namelist():
@@ -177,13 +178,13 @@ class Ts4ScriptFiles:
                 Ts4ScriptFiles.log(output, f"!!!! Loading will continue in {i} minutes!")
                 time.sleep(60)
         if c > 0:
-            message = f"Review these mods: {_zipfile}\n\n"
+            message = f"Review these mods: {review_mods}\n\n"
             if len(Scanner.found_networks) > 0:
-                message = f"{message}Found {len(Scanner.found_networks)} possible calls to access the network which can be used to download malware ({Scanner.found_networks})\n\n"
+                message = f"{message}Found {len(Scanner.found_networks)} possible calls to access the network which can be used to download malware ({set(Scanner.found_networks)})\n\n"
             if len(Scanner.found_launchs) > 0:
-                message = f"{message}Found {len(Scanner.found_launchs)} possible calls to start applications or malware ({Scanner.found_launchs})\n\n"
+                message = f"{message}Found {len(Scanner.found_launchs)} possible calls to start applications or malware ({set(Scanner.found_launchs)})\n\n"
             if len(Scanner.found_others) > 0:
-                message = f"{message}Found {len(Scanner.found_others)} possible calls to indirectly start applications or malware ({Scanner.found_others})\n\n"
+                message = f"{message}Found {len(Scanner.found_others)} possible calls to indirectly start applications or malware ({set(Scanner.found_others)})\n\n"
             message = f"{message}Please review these mods and define secure mods as exceptions. Click 'OK' to continue."
             Alert('Privacy Protector', message)
 
@@ -265,11 +266,11 @@ class Ts4ScriptFiles:
                 if _found_critical:
                     _s = s.rpartition('.')[2]
                     if s in launchs:
-                        Scanner.found_launchs.add(_s)
+                        Scanner.found_launchs.append(_s)
                     elif s in networks:
-                        Scanner.found_networks.add(_s)
+                        Scanner.found_networks.append(_s)
                     else:
-                        Scanner.found_others.add(_s)
+                        Scanner.found_others.append(_s)
                 found_critical += _found_critical
                 found_something += _found_something
                 found_self += _found_self

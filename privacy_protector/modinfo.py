@@ -144,14 +144,21 @@ class ModInfo(S4CLCommonModInfo):
 
     @property
     def _version(self) -> str:
-        return '1.9.3'
+        return '1.9.5'
 
 
 r'''
+v1.9.5
+    Fixes:
+        PP-3 Count the number of network/launch/other calls properly.
+v.1.9.4
+    Fixes:
+        PP-2 Last scanned mod instead of mods with issues are shown in popup.
 v1.9.3
     Tested with TS4 v1.107
 v1.9.2
-    Show mods in Popup Message
+    Improvements:
+        PP-1 Add the offending mods to the popup message.
 v1.9.1
     Fixed text in Popup Message
 v1.9.0

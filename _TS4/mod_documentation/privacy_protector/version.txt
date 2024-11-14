@@ -1,5 +1,6 @@
-Privacy-Protector v1.9.3 for The Sims 4 v1.110.294 and S4CL v3.7
-Created on 2024-11-03
-v1.9.3
-    Tested with TS4 v1.107
+Privacy-Protector v1.9.5 for The Sims 4 v1.110.311 and S4CL v3.9
+Created on 2024-11-09
+v1.9.5
+    Fixes:
+        PP-3 Count the number of network/launch/other calls properly.
 
