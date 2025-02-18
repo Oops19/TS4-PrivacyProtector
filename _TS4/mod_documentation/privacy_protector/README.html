@@ -1,0 +1,451 @@
+<h1>Privacy Protector</h1>
+This mod includes reviewed S4CL code to avoid and dependency to other mods.<br/>
+<br/>
+<h2>Features</h2>
+It blocks, in contrary to ModGuard, also most mods which can be found on NSFW pages.<br/>
+<br/>
+<h3>Blocking Features</h3>
+This mods blocks some Python calls which compromise security.<br/>
+<br/>
+This mod does not block<br/>
+<ul>
+	<li>File access (reading, writing, encrypting, deleting files locally and in the network, USB and NAS)</li>
+	<li>Python commands to load and/or execute code:</li>
+	<li>eval()</li>
+	<li>exec()</li>
+	<li>sys.modules()</li>
+</ul>
+<br/>
+Unfortunately the insecure eval() and exec() commands are used by TS4 itself.<br/>
+They work very good as the initial attack vector to execute code and to encrypt files.<br/>
+Python-based ransomware is available and it works fine.<br/>
+Without the ability to connect to the internet there should be at least no data breach.<br/>
+<br/>
+<i>sys.modules()</i> is needed by TS4 itself and file access is needed by mods to write log files.<br/>
+<br/>
+<h3>Logging Features</h3>
+This mod supports scanning of script mods.<br/>
+<br/>
+This mod scans <i>*.zip`, <i>*.ts4script</i> and <i>*.py</i> files the <i>The Sims 4/Mods/</i> and all sub-directories<br/>
+Mods which are saved to <i>The Sims 4/Mods/AAA/AAA/</i> (or any other 2nd level directory) will likely not be executed by TS4 but still scanned.<br/>
+<br/>
+It does not yet read and scan <i>*.package</i> files. Malformed <i>Package`files to exploit vulnerabilities in <i>TS4.exe</i> usually crash the process and do no harm.<br/>
+<br/>
+<h2>Usage</h2>
+Read <i>Addendum / Installation</i> to install this mod.<br/>
+It should block all known methods to download and install malware.<br/>
+It writes logs and shows an 'Alert' if something is detected.<br/>
+<br/>
+The mod does not block execution of malware which runs completely offline.<br/>
+To protect against such mods:<br/>
+<ul>
+	<li>Scan the mods before installing them and review the log files.</li>
+	<li>Never ever install a mod which uses eval() or exec().  Ask the mod author to fix their mod.</li>
+</ul>
+<br/>
+If mods with eval() or exec() statements are found this mod will show a popup window and block further loading and execution of mods.<br/>
+The game will shut down upon closing the window and allow you to remove these mods.<br/>
+Or you might add them to the exception list and enjoy the risk.<br/>
+<br/>
+<h3>Background</h3>
+Some mods invade the privacy of users and send a notification to the author every time <i>The Sims 4</i> is started.<br/>
+While the <i>TS4.exe</i> process sends data to EA there is no need that mods do this.<br/>
+Mod creators have no legitimate reason to collect data like<br/>
+<ul>
+	<li>Installed UGC of players</li>
+	<li>Knowing when players start <i>The Sims 4`</li>
+	<li>Geolocation of players</li>
+	<li>EA username</li>
+	<li>Local username</li>
+	<li>Operating system</li>
+</ul>
+<br/>
+Other mods also download and execute malware.<br/>
+<br/>
+All mods can be considered as UGC and the EA TOS <a href='https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/'>https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/</a> applies:<br/>
+<br/>
+<h4>When you access or use an EA Service, you agree that you will not:</h4>
+<ul>
+	<li>Use any software or program that damages, interferes with or disrupts an EA Service or another's computer or property, such as denial of service attacks, spamming, hacking, or uploading computer viruses, worms, Trojan horses, cancelbots, spyware, corrupted files and time bombs.</li>
+	<li>Interfere with or disrupt another player's use of an EA Service. This includes disrupting the normal flow of game play, chat or dialogue within an EA Service by, for example, using vulgar or harassing language, being abusive, excessive shouting (all caps), spamming, flooding or hitting the return key repeatedly.</li>
+	<li>Attempt to obtain, or phish for, a password, account information, or other private information from anyone else on EA Services.</li>
+</ul>
+<br/>
+This mod does not disrupt any other normal mod.<br/>
+<ul>
+	<li>It will disrupt mods which violate your privacy.</li>
+	<li>It will affect multiplayer mods which usually violate the EA TOS.</li>
+	<li>It will also disrupt mods which make use of questionable functions for other purposes.</li>
+	<li>Mods opening a TCP connection will also be affected even though an open socket alone does not violate privacy.</li>
+</ul>
+<br/>
+It may break some mods you have installed, but this is very unlikely.<br/>
+You should be aware of these mods already.<br/>
+<ul>
+	<li>In case there is an issue you can always uninstall this mod.</li>
+</ul>
+<br/>
+During my tests I identified a few tracking mods but no False Positives were blocked.<br/>
+I have been testing a lot, also with UGC containing malware.<br/>
+<br/>
+The scanner itself will detect many things and lists them all.<br/>
+Not everything detected is an actual call, it can also be a constant or string.<br/>
+Du to the options Python has to write code it's hard to improve this behaviour.<br/>
+In the scanners log file one can observe a lot of 'False Positives'.<br/>
+<br/>
+<br/>
+<br/>
+<h2>Internals</h2>
+<br/>
+<h3>Injector</h3>
+The injector injects into various Python methods known to be used by trackers and malware to send data to sites and/or to download and execute code.<br/>
+Normal script mods never call these methods.<br/>
+<br/>
+It will raise a PrivacyException to prevent the further execution of this part of the mod. The mod will likely catch this exception and not notify the user.<br/>
+<br/>
+It logs data to <i>The Sims 4/mod_logs/PrivacyProtector.txt</i> for review.<br/>
+<br/>
+If it detects the usage of a very questionable method it will show an in-game popup.<br/>
+<br/>
+<br/>
+<h4>Eval() & Exec()</h4>
+Ths mod does not inject into eval() and exec() due to limitations of Python. The scanner will detect these methods.<br/>
+<br/>
+<h2>Scanner</h2>
+This mod features also a scanner to scan the mods. It is not 100% accurate but quite good.<br/>
+It starts one minute after starting The Sims 4 and scans all mods.<br/>
+<br/>
+<h3>Exclude from Scanner</h3>
+To exclude some mods locate the 'The Sims 4/mod_data/privacy_protector/skip_mods/' directory and copy the mods (.ts4script files) to it.<br/>
+<br/>
+It is enough to create an empty file with the exact mod name but copy may be easier for most users.<br/>
+The content of the file does not matter. I included a few empty files of mods which are safe. You may remove them to get logs for them.<br/>
+<br/>
+The scanner will report whether it found something when the game runs. Details are in the log file.<br/>
+It runs in the background and allocates one core. There will be virtually no delay starting TS4 with a 4+ core CPU.<br/>
+<br/>
+It is highly recommended to review the log file and to add safe mods to the skip_mods directory.<br/>
+<br/>
+<h4>Manual Scanning</h4>
+To scan new mods add them to the Mods folder while the game is already running.<br/>
+<ul>
+	<li>'privacy.scan' scans the mods for known issues. This is the command you may want to use.</li>
+	<li>'privacy.search foo' allows to scan for 'foo' within mods. To scan only for 'exec' you may use this command with 'privacy.search exec'. It is slightly faster than a full scan.</li>
+</ul>
+<br/>
+Output is written to the console and also logged. As it can be quite a lot of data please be patient.<br/>
+<br/>
+<h4>Eval() & Exec()</h4>
+The manual and automatic scanner detect both methods.<br/>
+<br/>
+There may be many matches like 'literal_eval', 'evaluate' or 'execute' which are considered as harmless. These will be logged as:<br/>
+<ul>
+	<li>Seems OK. Found eval in \sims4communitylib.ts4script(sims4communitylib/utils/cas/common_outfit_utils.pyc): ['\\x00\\x00\\x00\\xda\\x1devaluate_appearance_modi']</li>
+</ul>
+<br/>
+If you get a statement like this you may have a problem:<br/>
+<ul>
+	<li>!! Found eval in \_evil_\xxx.ts4script(xxx.pyc): ['\\x00\\x00\\x00\\xda\\x04eval\\xda\\x03hex\\xda\\x03l']</li>
+</ul>
+<br/>
+At the end of the scan process the summary is printed which makes it easy to look for real problems, if any. All close matches which seem to be harmless will not be counted.<br/>
+<ul>
+	<li>Found 'eval' 1 times.</li>
+</ul>
+<br/>
+Detected issues are logged with '!!' so they are easy to search.<br/>
+The bad lines start with <i>''</i> while the 'good' lines start with 'Seems OK.' and don't count to towards the number of detected issues.<br/>
+<br/>
+<h4>Output samples</h4>
+This mod is a simple code scanner and as such can't be 100 % sure whether a detected issue is really malware.<br/>
+So one needs to look at some code around of the statement to get an idea.<br/>
+<br/>
+I already received requests to add AI code to this mod for a better accuracy but this would blow up the size of the mod and scanning would take ages if it ever completed. So please don't ask for this.<br/>
+<br/>
+<br/>
+<h5>Trackers / Malware Downloader</h5>
+If you find things like this you can be sure your mod has a tracker.<br/>
+<br/>
+<ul>
+	<li>!! Found 'FTP' in '\folder\mod.ts4script(file.pyc)': ['6remove)\\x01\\xda\\x03FTP\\xfa\\x01|r@\\x00\\x00\\', ...]</li>
+</ul>
+It's not clear what ftplib.FTP() command is executed, but for sure it's a tracker or malware downloader.<br/>
+<br/>
+<ul>
+	<li>!! Found 'open' in '\folder\mod.ts4script(file.pyc)': ['1\\x10\\x01\\xda\\x16mc_open_url_in_browser)\\x01', '\\nwebbrowser\\xda\\x04open)\\x03rq\\x00\\x00\\x00r']</li>
+</ul>
+Opening a web site sends at least your IP to a server, often also the operating system is submitted. The request itself may contain other personal information as URL parameters.<br/>
+<br/>
+<ul>
+	<li>!! Found 'urlopen' in '\folder\mod.ts4script(file.pyc)': ['eREQUEST_HEADERZ\\x07urlopen\\xda\\x16_parse_versi']</li>
+</ul>
+'urllib.request.urlopen()' is yet another way top send private data to a server.<br/>
+<br/>
+<ul>
+	<li>!! Found 'Request' in '\folder\mod.ts4script(file.pyc)': ['\\xda\\x07requestZ\\x07Request\\xda\\x0eREQUEST_HEAD']</li>
+</ul>
+'urllib.request.Request()' is also used in some mods with trackers.<br/>
+<br/>
+<h5>Questionable</h5>
+Here one should review the code, some of the code may have been written with good intentions but it may very often be used to track you.<br/>
+<br/>
+<ul>
+	<li>!! Found 'open' in '\folder\mod.ts4script(file.pyc)': ['\\nwebbrowser\\xda\\x04open)\\x01Z\\x06dialog)\\x0']</li>
+</ul>
+I don't think that 'open)' is bad, anyhow with 'webbrowser' in the found string it looks odd.<br/>
+<br/>
+<ul>
+	<li>!! Found 'eval' in '\folder\mods.ts4script(file.pyc)': ['5\\xda\\x03ord\\xda\\x04eval\\xda\\x03hexr\\x13\\x00']</li>
+	<li>!! Found 'eval' in '\folder\mod.ts4script(file.pyc)': ['\\x00\\x00\\x00\\xda\\x04eval\\xda\\x03hex\\xda\\x03l']</li>
+</ul>
+Here one really wants to review the code, eval() should never be used. I reviewed it and can say that the code was safe but it was totally unnecessary to use eval().<br/>
+<br/>
+<h5>False Positives</h5>
+<ul>
+	<li>!! Found 'system' in '\folder\mod.ts4script(file.pyc)': ['\\x01\\x00\\x00\\xda\\x06system\\xda\\x07releaser7\\x0', ...]</li>
+</ul>
+There seems to be no os.system.releaser() function, so this seems to be safe.<br/>
+<br/>
+<ul>
+	<li>!! Found 'system' in '\folder\mod.ts4script(file.pyc)': ['\\x08platform\\xda\\x06system\\xda\\x07version\\xda\\']</li>
+</ul>
+There is a system.version() method which is safe from my point of view.<br/>
+<br/>
+<ul>
+	<li>!! Found 'system' in '\folder\mod.ts4script(file.pyc)': ['of {M0.his}{F0.her} system, no ...']</li>
+</ul>
+o19 slaps the author of this mod around a bit with a large trout. STBL belongs into .package files and not hard coded into code. No one can translate it or add gender pronouns.<br/>
+<br/>
+<ul>
+	<li>!! Found 'open' in '\folder\mods.ts4script(file.pyc)': ['\\x00\\x00\\x00z\\x14ww.open_contact_page)\\x01Z\\', ...]</li>
+</ul>
+With open_ there is no issue at all, the filter is not perfect. :(<br/>
+<br/>
+<h3>Alerts</h3>
+If you get a "Privacy violated. See logs for more details." alert you may want to know which mod caused it. You have to look into the logs file.<br/>
+There a stack trace is written with the causing method and as TS4 stacks can be quite long and nested this mod doesn't try to locate the offending mod.<br/>
+Usually it's the 2nd or 3rd line and not a vanilla function.<br/>
+<br/>
+The stack trace will contain as much information as possible, make sure to remove them before sharing a stack trace.<br/>
+It will be written on your computer and only people with access to your computer can read it.<br/>
+<br/>
+One example for such a stack trace called by a test function:<br/>
+<pre>
+WARN	'os.system(('powershell',); {})' called from:
+
+    T:\InGame\Gameplay\Scripts\Core\sims4\commands.py#398 '' in 'invoke_command()'
+    ...\privacy_protector_light\commands.py#95 'os.system(command)' in 'o19_debug_priv_shell()'
+    ...\privacy_protector_light\privacy_protector_light.py#283 'O19PrivacyProtector.log_data('os.system', *args, **kwargs)' in 'o19_override_os_system()'
+    ...\privacy_protector_light\privacy_protector_light.py#57 'thread_details = traceback.extract_stack(sys._current_frames()[thread.ident])' in 'log_data()'
+</pre>
+<br/>
+<h3>Testing</h3>
+The mod itself does not support testing things. In the 'mod_documentation' folder you'll find a 'Mods' folder which you may copy to your 'The Sims 4' folder.<br/>
+<br/>
+It should look like this afterwards: 'The Sims 4/Mods/_o19_/Scripts/commands.py'<br/>
+If you do this you enable yourself to connect to EA, open the browser or a shell. This should all work fine while this mod is not installed.<br/>
+The Privacy Protector should keep you safe.<br/>
+<br/>
+The Shift+Ctrl+C cheat console it needed to enter the commands:<br/>
+<ul>
+	<li>o19.priv - Print the following help</li>
+	<li>o19.priv.browser - Open <a href='https://www.ea.com/de-de/games/the-sims/the-sims-4'>https://www.ea.com/de-de/games/the-sims/the-sims-4</a> in the browser. *1</li>
+	<li>o19.priv.shell o - Open a powershell/bash.</li>
+	<li>o19.priv.shell s - Open a powershell/bash in the background.</li>
+	<li>o19.priv.socket - Open a socket connection to ea.com. *1</li>
+	<li>o19.priv.urllib - Open a urllib connection to ea.com. *1</li>
+	<li>o19.priv.scan eval - Scan mods for 'eval()'</li>
+	<li>o19.priv.scan exec - Scan mods for 'exec()'</li>
+	<li>o19.priv.scan foobar - Scan mods for 'foobar()' or any other function.</li>
+</ul>
+<br/>
+*1 EA should already know your IP address but you can edit the .py file and modify the used domain.<br/>
+<br/>
+Actually all commands should fail as long as the Privacy Protector is running.<br/>
+You may delete the mod but keep this file to make things work. Unless your endpoint security software blocks them.<br/>
+<br/>
+'commands.py' doesn't execute things in powershell/bash and it doesn't open URLs which auto-download malware but all this is possible from within TS4.<br/>
+With more and more malicious users targeting the community I decided to release this mod.<br/>
+<br/>
+<h3>Known Issues</h3>
+This mod will cause an exception which is logged to lastException.txt as <i>FileNotFoundError: [Errno 2] No such file or directory: '50f50c67da416c0e5bc95ecb07a5a116d8b22106c27a1e60708b06e22eeed20b.zip'</i>.<br/>
+This mod is still starting up fine while I'm looking for a way to avoid this exception.<br/>
+<br/>
+<br/>
+<br/>
+<h1>Addendum</h1>
+<br/>
+<h2>Game compatibility</h2>
+This mod has been tested with <i>The Sims 4</i> 1.111.102, S4CL 3.9, TS4Lib 0.3.33.<br/>
+It is expected to be compatible with many upcoming releases of TS4, S4CL and TS4Lib.<br/>
+<br/>
+<h2>Dependencies</h2>
+Download the ZIP file, not the sources.<br/>
+<ul>
+	<li><a href='../../releases/latest'>This Mod</a></li>
+	<li><a href='https://www.ea.com/games/the-sims/the-sims-4'>The Sims 4</a></li>
+</ul>
+<br/>
+If not installed download and install TS4 and these mods.<br/>
+All are available for free.<br/>
+<br/>
+<h2>Installation</h2>
+<ul>
+	<li>Locate the localized <i>The Sims 4</i> folder which contains the <i>Mods</i> folder.</li>
+	<li>Extract the ZIP file into this <i>The Sims 4</i> folder.</li>
+	<li>It will create the directories/files <i>Mods/_o19_/$mod_name.ts4script`, <i>Mods/_o19_/$mod_name.package`, <i>mod_data/$mod_name/*</i> and/or <i>mod_documentation/$mod_name/*`</li>
+	<li>`mod_logs/$mod_name.txt</i> will be created as soon as data is logged.</li>
+</ul>
+<br/>
+<h3>Manual Installation</h3>
+If you don't want to extract the ZIP file into <i>The Sims 4</i> folder you might want to read this.<br/>
+<ul>
+	<li>The files in <i>ZIP-File/mod_data</i> are usually required and should be extracted to <i>The Sims 4/mod_data`.</li>
+	<li>The files in <i>ZIP-File/mod_documentation</i> are for you to read it. They are not needed to use this mod.</li>
+	<li>The <i>Mods/_o19_/*.ts4script</i> files can be stored in a random folder within <i>Mods</i> or directly in <i>Mods</i>. I highly recommend to store it in <i>_o19_</i> so you know who created it.</li>
+</ul>
+<br/>
+<h2>Usage Tracking / Privacy</h2>
+This mod does not send any data to tracking servers. The code is open source, not obfuscated, and can be reviewed.<br/>
+<br/>
+Some log entries in the log file ('mod_logs' folder) may contain the local username, especially if files are not found (WARN, ERROR).<br/>
+<br/>
+<h2>External Links</h2>
+<a href='https://github.com/Oops19/'>Sources</a><br/>
+<a href='https://discord.gg/d8X9aQ3jbm'>Support</a><br/>
+<a href='https://www.patreon.com/o19'>Donations</a><br/>
+<br/>
+<h2>Copyright and License</h2>
+<ul>
+	<li>© 2024 <a href='https://github.com/Oops19'>Oops19</a></li>
+	<li>License for '.package' files: <a href='https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/'>Electronic Arts TOS for UGC</a></li>
+	<li>License for other media unless specified differently: <a href='https://creativecommons.org/licenses/by/4.0/'>CC BY 4.0</a> unless the Electronic Arts TOS for UGC overrides it.</li>
+</ul>
+This allows you to use this mod and re-use the code even if you don't own The Sims 4.<br/>
+Have fun extending this mod and/or integrating it with your mods.<br/>
+<br/>
+Oops19 / o19 is not endorsed by or affiliated with Electronic Arts or its licensors.<br/>
+Game content and materials copyright Electronic Arts Inc. and its licensors.<br/>
+Trademarks are the property of their respective owners.<br/>
+<br/>
+<h3>TOS</h3>
+<ul>
+	<li>Please don't put it behind a paywall.</li>
+	<li>Please don't create mods which break with every TS4 update.</li>
+	<li>For simple tuning modifications use <a href='https://github.com/Oops19/TS4-PatchXML'>Patch-XML</a></li>
+	<li>or <a href='https://github.com/Oops19/TS4-LiveXML'>LiveXML</a>.</li>
+	<li>To check the XML structure of custom tunings use <a href='https://github.com/Oops19/TS4-VanillaLogs'>VanillaLogs</a>.</li>
+</ul>
+<br/>
+<br/>
+<br/>
+<h1>Addendum</h1>
+<br/>
+<h2>Game compatibility</h2>
+This mod has been tested with <i>The Sims 4</i> 1.112.519, S4CL 3.10, TS4Lib 0.3.36.<br/>
+It is expected to be compatible with many upcoming releases of TS4, S4CL and TS4Lib.<br/>
+<br/>
+<h2>Dependencies</h2>
+Download the ZIP file, not the sources.<br/>
+<ul>
+	<li><a href='../../releases/latest'>This Mod</a></li>
+	<li><a href='https://github.com/Oops19/TS4-Library/releases/latest'>TS4-Library</a></li>
+	<li><a href='https://github.com/ColonolNutty/Sims4CommunityLibrary/releases/latest'>S4CL</a></li>
+	<li><a href='https://www.ea.com/games/the-sims/the-sims-4'>The Sims 4</a></li>
+</ul>
+<br/>
+If not installed download and install TS4 and these mods.<br/>
+All are available for free.<br/>
+<br/>
+<h2>Removal of the mod</h2>
+The mod installation with unzip writes to a few directories.<br/>
+To remove this mod and all related files locate the files and folders and remove them:<br/>
+<ul>
+	<li>`The Sims 4/Mods/_o19_/$mod_name.*`</li>
+	<li>`The Sims 4/mod_data/_o19_/$mod_name/`</li>
+	<li>`The Sims 4/mod_documentation/_o19_/$mod_name/`</li>
+	<li>`The Sims 4/mod_sources/_o19_/$mod_name/`</li>
+</ul>
+<br/>
+To remove all of my mods locate these folders and remove them:<br/>
+<ul>
+	<li>`The Sims 4/Mods/_o19_/`</li>
+	<li>`The Sims 4/mod_data/_o19_/`</li>
+	<li>`The Sims 4/mod_documentation/_o19_/`</li>
+	<li>`The Sims 4/mod_sources/_o19_/`</li>
+</ul>
+<br/>
+<h2>Installation</h2>
+<ul>
+	<li>Locate the localized <i>The Sims 4</i> folder which contains the <i>Mods</i> folder.</li>
+	<li>Extract the ZIP file into this <i>The Sims 4</i> folder.</li>
+	<li>It will create the directories/files <i>Mods/_o19_/$mod_name.ts4script`, <i>Mods/_o19_/$mod_name.package`, <i>mod_data/$mod_name/*</i> and/or <i>mod_documentation/$mod_name/*</i> and/or <i>mod_sources/$mod_name/*`</li>
+	<li>CAS and build-buy UGC without scripts will create <i>Mods/o19/$mod_name.package`.</li>
+	<li>`mod_logs/$mod_name.txt</i> will be created as soon as data is logged.</li>
+	<li>`mod_documentation/$mod_name/</i> and/or <i>mod_sources/$mod_name/</i> are not required and can be deleted.</li>
+</ul>
+<br/>
+<h3>Manual Installation</h3>
+If you don't want to extract the ZIP file into <i>The Sims 4</i> folder you might want to read this.<br/>
+You can extract the ZIP file to a temporary directory and copy the folders manually.<br/>
+<ul>
+	<li>The files in <i>ZIP-File/mod_data</i> are usually required and should be extracted to <i>The Sims 4/mod_data`.</li>
+	<li>The files in <i>ZIP-File/mod_documentation</i> are for you to read it. They are not needed to use this mod.</li>
+	<li>The files in <i>ZIP-File/mod_sources</i> are not needed to use this mod.</li>
+	<li>The <i>Mods/_o19_/*.ts4script</i> files can be stored in a random folder within <i>Mods</i> or directly in <i>Mods</i>. I highly recommend to store it in <i>_o19_</i> so you know who created it.</li>
+</ul>
+<br/>
+<h2>Troubleshooting</h2>
+When installed properly this is not necessary at all.<br/>
+For manual installations check these things and make sure each question can be answered with 'yes'.<br/>
+<ul>
+	<li>Does 'The Sims 4' (localized to Die Sims 4, Les Sims 4, Los Sims 4, The Sims 4, ...) exist?</li>
+	<li>Does <i>The Sims 4</i> contain the folder <i>Mods`?</li>
+	<li>Does <i>Mods</i> contain the folder <i>_o19_`?</li>
+	<li>Does <i>_19_</i> contain <i>ts4lib.ts4script</i> and <i>ts4lib.package</i> files?</li>
+	<li>Does <i>_19_</i> contain <i>{mod_name}.ts4script</i> and/or <i>{mod_name}.package</i> files?</li>
+	<li>Does <i>The Sims 4</i> contain the folder <i>mod_data`?</li>
+	<li>Does <i>mod_data</i> contain the folder <i>{mod_name}`?</li>
+	<li>Does <i>{mod_name}</i> contain files or folders?</li>
+	<li>Does <i>The Sims 4</i> contain the <i>mod_logs</i> ?</li>
+	<li>Does <i>mod_logs</i> contain the file <i>Sims4CommunityLib_*_Messages.txt`?</li>
+	<li>Does <i>mod_logs</i> contain the file <i>TS4-Library_*_Messages.txt`?</li>
+	<li>Is this the most recent version or can it be updated?</li>
+	<li>Does <i>mod_logs</i> contain the file <i>{mod_name}_*_Messages.txt`?</li>
+	<li>Is this the most recent version or can it be updated?</li>
+	<li>Doesn't <i>The Sims 4</i> contain the file(s) <i>last_exception.txt</i>  and/or <i>last_exception*.txt</i> ?</li>
+	<li>Share the <i>The Sims 4/mod_logs/Sims4CommunityLib_*_Messages.txt</i> and <i>The Sims 4/mod_logs/{mod_name}_*_Messages.txt</i>  file.</li>
+</ul>
+<br/>
+<h2>Usage Tracking / Privacy</h2>
+This mod does not send any data to tracking servers. The code is open source, not obfuscated, and can be reviewed.<br/>
+<br/>
+Some log entries in the log file ('mod_logs' folder) may contain the local username, especially if files are not found (WARN, ERROR).<br/>
+<br/>
+<h2>External Links</h2>
+<a href='https://github.com/Oops19/'>Sources</a><br/>
+<a href='https://discord.gg/d8X9aQ3jbm'>Support</a><br/>
+<a href='https://www.patreon.com/o19'>Donations</a><br/>
+<br/>
+<h2>Copyright and License</h2>
+<ul>
+	<li>© 2020-2025 <a href='https://github.com/Oops19'>Oops19</a></li>
+	<li>License for '.package' files: <a href='https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/'>Electronic Arts TOS for UGC</a></li>
+	<li>License for other media unless specified differently: <a href='https://creativecommons.org/licenses/by/4.0/'>CC BY 4.0</a> unless the Electronic Arts TOS for UGC overrides it.</li>
+</ul>
+This allows you to use this mod and re-use the code even if you don't own The Sims 4.<br/>
+Have fun extending this mod and/or integrating it with your mods.<br/>
+<br/>
+Oops19 / o19 is not endorsed by or affiliated with Electronic Arts or its licensors.<br/>
+Game content and materials copyright Electronic Arts Inc. and its licensors.<br/>
+Trademarks are the property of their respective owners.<br/>
+<br/>
+<h3>TOS</h3>
+<ul>
+	<li>Please don't put it behind a paywall.</li>
+	<li>Please don't create mods which break with every TS4 update.</li>
+	<li>For simple tuning modifications use <a href='https://github.com/Oops19/TS4-PatchXML'>Patch-XML</a></li>
+	<li>or <a href='https://github.com/Oops19/TS4-LiveXML'>LiveXML</a>.</li>
+	<li>To check the XML structure of custom tunings use <a href='https://github.com/Oops19/TS4-VanillaLogs'>VanillaLogs</a>.</li>
+</ul>
+<br/>
