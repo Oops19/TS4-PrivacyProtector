@@ -49,7 +49,7 @@ __author__ = "Michael Felt <aixtools@felt.demon.nl>"
 import re
 from os import environ, path
 from sys import executable
-from pp_ctypes import c_void_p, sizeof
+from privacy_protector.pp_ctypes import c_void_p, sizeof
 from subprocess import Popen, PIPE, DEVNULL
 
 # Executable bit size - 32 or 64

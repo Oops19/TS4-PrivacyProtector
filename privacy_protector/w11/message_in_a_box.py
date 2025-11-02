@@ -1,4 +1,10 @@
-import pp_ctypes
+#
+# LICENSE https://creativecommons.org/licenses/by/4.0/ https://creativecommons.org/licenses/by/4.0/legalcode
+# © 2024 https://github.com/Oops19
+#
+
+
+from privacy_protector import pp_ctypes
 
 
 class MessageInABox:

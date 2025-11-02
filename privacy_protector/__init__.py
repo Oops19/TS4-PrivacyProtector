@@ -3,9 +3,19 @@
 # © 2024 https://github.com/Oops19
 #
 
+import os
+import sys
+
+# On macOS, remove ts4l_ctypes from sys.path to prevent import errors
+if sys.platform == "darwin":
+    p = os.path.join(os.path.dirname(__file__), "pp_ctypes")
+    if p in sys.path:
+        sys.path.remove(p)
+    p = os.path.join(os.path.dirname(__file__), "pp_ctypes", "macholib")
+    if p in sys.path:
+        sys.path.remove(p)
 
 import hashlib
-import sys
 import threading
 import traceback
 from typing import List

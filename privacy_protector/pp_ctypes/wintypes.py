@@ -1,5 +1,5 @@
 # The most useful windows datatypes
-import pp_ctypes
+from privacy_protector import pp_ctypes
 
 BYTE = pp_ctypes.c_byte
 WORD = pp_ctypes.c_ushort

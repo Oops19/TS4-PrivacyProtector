@@ -1,5 +1,11 @@
-import pp_ctypes
-from pp_ctypes import wintypes
+#
+# LICENSE https://creativecommons.org/licenses/by/4.0/ https://creativecommons.org/licenses/by/4.0/legalcode
+# © 2024 https://github.com/Oops19
+#
+
+
+from privacy_protector import pp_ctypes
+from privacy_protector.pp_ctypes import wintypes
 
 from privacy_protector.modinfo import S4CLModInfo
 from privacy_protector.s4cl.s4cl_common_log_registry import S4CLCommonLog

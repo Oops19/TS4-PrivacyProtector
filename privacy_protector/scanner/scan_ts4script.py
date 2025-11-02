@@ -16,6 +16,7 @@ import services
 from privacy_protector.modinfo import S4CLModInfo
 from privacy_protector.ui.privacy_protector import PrivacyProtector
 from privacy_protector.w11.alert import Alert
+from privacy_protector.mac.alert import Alert
 from ui.ui_dialog_notification import UiDialogNotification
 
 
