@@ -1,5 +1,5 @@
-Privacy-Protector v1.9.6 for The Sims 4 v1.119.109 and S4CL v3.17
-Created on 2025-11-12
+Privacy-Protector v1.9.6 for The Sims 4 v1.120.117 and S4CL v3.17
+Created on 2025-12-14
 v1.9.6
     Restore compatibility with macOS. Infinity loading on macOS if something really bad has been detected instead of a MessageBox. 
 
