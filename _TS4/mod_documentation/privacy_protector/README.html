@@ -1,13 +1,20 @@
-<h1>Privacy Protector</h1>
+<h1>🔒 Privacy Protector</h1>
 This mod includes reviewed S4CL code to avoid and dependency to other mods.<br/>
 <br/>
-<h2>Features</h2>
-It blocks, in contrary to ModGuard, also most mods which can be found on NSFW pages.<br/>
+<h2>🍎 Mac Version</h2>
+The Mac builds should be used on Mac.<br/>
+They don't use <i>ctypes</i> and don't show a popup message if something evil is detected.<br/>
+They can be used also on Windows.<br/>
 <br/>
-<h3>Blocking Features</h3>
-This mods blocks some Python calls which compromise security.<br/>
+<h2>⚙️ Features</h2>
+It blocks, in contrary to ModGuard, also most mods which can be found on SFW & NSFW pages.<br/>
+If eval() or exec() are found further execution will be prevented.<br/>
+If the loading screen is displayed longer than usual on Mac check the logs. On Windows a popup should appear.<br/>
 <br/>
-This mod does not block<br/>
+<h3>🚫 Blocking Features</h3>
+This mod blocks some Python calls which compromise security.<br/>
+<br/>
+This mod does not block:<br/>
 <ul>
 	<li>File access (reading, writing, encrypting, deleting files locally and in the network, USB and NAS)</li>
 	<li>Python commands to load and/or execute code:</li>
@@ -17,21 +24,21 @@ This mod does not block<br/>
 </ul>
 <br/>
 Unfortunately the insecure eval() and exec() commands are used by TS4 itself.<br/>
-They work very good as the initial attack vector to execute code and to encrypt files.<br/>
+They work very well as the initial attack vector to execute code and to encrypt files.<br/>
 Python-based ransomware is available and it works fine.<br/>
 Without the ability to connect to the internet there should be at least no data breach.<br/>
 <br/>
 <i>sys.modules()</i> is needed by TS4 itself and file access is needed by mods to write log files.<br/>
 <br/>
-<h3>Logging Features</h3>
+<h3>📝 Logging Features</h3>
 This mod supports scanning of script mods.<br/>
 <br/>
-This mod scans <i>*.zip`, <i>*.ts4script</i> and <i>*.py</i> files the <i>The Sims 4/Mods/</i> and all sub-directories<br/>
+This mod scans <i>*.zip`, <i>*.ts4script</i> and <i>*.py</i> files in <i>The Sims 4/Mods/</i> and all sub-directories.<br/>
 Mods which are saved to <i>The Sims 4/Mods/AAA/AAA/</i> (or any other 2nd level directory) will likely not be executed by TS4 but still scanned.<br/>
 <br/>
-It does not yet read and scan <i>*.package</i> files. Malformed <i>Package`files to exploit vulnerabilities in <i>TS4.exe</i> usually crash the process and do no harm.<br/>
+It does not yet read and scan <i>*.package</i> files. Malformed <i>Package</i> files to exploit vulnerabilities in <i>TS4.exe</i> usually crash the process and do no harm.<br/>
 <br/>
-<h2>Usage</h2>
+<h2>▶️ Usage</h2>
 Read <i>Addendum / Installation</i> to install this mod.<br/>
 It should block all known methods to download and install malware.<br/>
 It writes logs and shows an 'Alert' if something is detected.<br/>
@@ -40,17 +47,17 @@ The mod does not block execution of malware which runs completely offline.<br/>
 To protect against such mods:<br/>
 <ul>
 	<li>Scan the mods before installing them and review the log files.</li>
-	<li>Never ever install a mod which uses eval() or exec().  Ask the mod author to fix their mod.</li>
+	<li>Never ever install a mod which uses eval() or exec(). Ask the mod author to fix their mod.</li>
 </ul>
 <br/>
 If mods with eval() or exec() statements are found this mod will show a popup window and block further loading and execution of mods.<br/>
 The game will shut down upon closing the window and allow you to remove these mods.<br/>
-Or you might add them to the exception list and enjoy the risk.<br/>
+Or you might add them to the exception list and accept the risk.<br/>
 <br/>
-<h3>Background</h3>
+<h3>📚 Background</h3>
 Some mods invade the privacy of users and send a notification to the author every time <i>The Sims 4</i> is started.<br/>
 While the <i>TS4.exe</i> process sends data to EA there is no need that mods do this.<br/>
-Mod creators have no legitimate reason to collect data like<br/>
+Mod creators have no legitimate reason to collect data like:<br/>
 <ul>
 	<li>Installed UGC of players</li>
 	<li>Knowing when players start <i>The Sims 4`</li>
@@ -64,12 +71,15 @@ Other mods also download and execute malware.<br/>
 <br/>
 All mods can be considered as UGC and the EA TOS <a href='https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/'>https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/</a> applies:<br/>
 <br/>
-<h4>When you access or use an EA Service, you agree that you will not:</h4>
+<h4>📜 EA Terms of Service Excerpt</h4>
+When you access or use an EA Service, you agree that you will not:<br/>
 <ul>
 	<li>Use any software or program that damages, interferes with or disrupts an EA Service or another's computer or property, such as denial of service attacks, spamming, hacking, or uploading computer viruses, worms, Trojan horses, cancelbots, spyware, corrupted files and time bombs.</li>
 	<li>Interfere with or disrupt another player's use of an EA Service. This includes disrupting the normal flow of game play, chat or dialogue within an EA Service by, for example, using vulgar or harassing language, being abusive, excessive shouting (all caps), spamming, flooding or hitting the return key repeatedly.</li>
 	<li>Attempt to obtain, or phish for, a password, account information, or other private information from anyone else on EA Services.</li>
 </ul>
+<br/>
+---<br/>
 <br/>
 This mod does not disrupt any other normal mod.<br/>
 <ul>
@@ -90,9 +100,8 @@ I have been testing a lot, also with UGC containing malware.<br/>
 <br/>
 The scanner itself will detect many things and lists them all.<br/>
 Not everything detected is an actual call, it can also be a constant or string.<br/>
-Du to the options Python has to write code it's hard to improve this behaviour.<br/>
-In the scanners log file one can observe a lot of 'False Positives'.<br/>
-<br/>
+Due to the options Python has to write code it's hard to improve this behaviour.<br/>
+In the scanner’s log file one can observe a lot of 'False Positives'.<br/>
 <br/>
 <br/>
 <h2>Internals</h2>
@@ -105,7 +114,7 @@ It will raise a PrivacyException to prevent the further execution of this part o
 <br/>
 It logs data to <i>The Sims 4/mod_logs/PrivacyProtector.txt</i> for review.<br/>
 <br/>
-If it detects the usage of a very questionable method it will show an in-game popup.<br/>
+If it detects the usage of a very questionable method it will show a popup.<br/>
 <br/>
 <br/>
 <h4>Eval() & Exec()</h4>

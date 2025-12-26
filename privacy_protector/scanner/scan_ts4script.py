@@ -15,8 +15,10 @@ import threading
 import services
 from privacy_protector.modinfo import S4CLModInfo
 from privacy_protector.ui.privacy_protector import PrivacyProtector
-from privacy_protector.w11.alert import Alert
-from privacy_protector.mac.alert import Alert
+try:
+    from w11.alert import Alert
+except:
+    from privacy_protector.mac.alert import Alert
 from ui.ui_dialog_notification import UiDialogNotification
 
 
@@ -30,9 +32,9 @@ class Scanner:
     thread = None
     found_e_vals: Set[str] = set()
     found_e_xecs: Set[str] = set()
-    found_launchs: List[str] = set()
-    found_networks: List[str] = set()
-    found_others: List[str] = set()
+    found_launchs: List[str] = []
+    found_networks: List[str] = []
+    found_others: List[str] = []
 
     def __init__(self, mods_directory: str = None):
         if mods_directory is None:
@@ -96,6 +98,7 @@ class Ts4ScriptFiles:
         s = 0  # Other suspicious function in Privacy Protector - Due to injections there will be matches
         review_mods: Set = set()
 
+        entry = ['', '']
         try:
             mods_path = os.path.join(os.path.dirname(os.path.realpath(__file__)).partition(f"{os.sep}Mods{os.sep}")[0], 'Mods')
             file_list = Ts4ScriptFiles.get_files(mods_path)
@@ -144,7 +147,7 @@ class Ts4ScriptFiles:
                             review_mods.add(f"{_zipfile}")
             Ts4ScriptFiles.log(output, f"Done")
         except Exception as e:
-            Ts4ScriptFiles.log(output, f"*Error '{e}''.")
+            Ts4ScriptFiles.log(output, f"*Error '{e}' scanning '{files}.")
 
         log.debug(f"EVAL: {c_ev}, {o_ev}, {s_ev}; EXEC: {c_ex}, {o_ex}, {s_ex}; OTHER: {c}, {o}, {s}; (exact/very close match, string match, match in Privacy Protector)")
         Ts4ScriptFiles.possible_issues = c_ev + c_ex + c
@@ -173,7 +176,7 @@ class Ts4ScriptFiles:
             Ts4ScriptFiles.log(output, f"!!!! Found {c} strings closely matching critical statements. Review the offending mods and restart!")
         Ts4ScriptFiles.log(output, f"**** Summary of files with critical issues: {review_mods}")
         if suspend_progress:
-            Alert('Privacy Protector', "One or more mods with eval() and/or exec() statements have been found. Please review these mods and define delete the insecure mods or define them as exceptions if you love the risk. Click 'OK' to EXIT the game for your own safety.", fatal=True)
+            Alert('Privacy Protector', f"One or more mods with {e_val}() and/or {e_xec}() statements have been found. Please review these mods and define delete the insecure mods or define them as exceptions if you love the risk. Click 'OK' to EXIT the game for your own safety.", fatal=True)
             for i in sorted(range(1, 31), reverse=True):
                 Ts4ScriptFiles.log(output, f"!!!! Delete the offending mods with {e_val} and/or {e_xec}!")
                 Ts4ScriptFiles.log(output, f"!!!! Loading will continue in {i} minutes!")
@@ -347,7 +350,7 @@ class Ts4ScriptFiles:
 
     @staticmethod
     def log(output, message):
-        if output and (message[0] == "!" or message[0] == "*"):
+        if output and len(message) > 0 and (message[0] == "!" or message[0] == "*"):
             output(message)
         try:
             if message[0] == "!":

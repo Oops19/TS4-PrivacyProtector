@@ -144,12 +144,16 @@ class ModInfo(S4CLCommonModInfo):
 
     @property
     def _version(self) -> str:
-        return '1.9.6'
+        return '2.0.0'
 
 
 r'''
+v2.0.0
+    PP-5 Dedicated Windows and Mac (without ctypes) builds
+    PP-6 Fix 'privacy.scan'
+    PP-7 Remove scan for zip during startup
 v1.9.6
-    Restore compatibility with macOS. Infinity loading on macOS if something really bad has been detected instead of a MessageBox. 
+    Fixes: PP-4 Restore compatibility with macOS. Infinity loading on macOS if something really bad has been detected instead of a MessageBox. 
 v1.9.5
     Fixes: PP-3 Count the number of network/launch/other calls properly.
 v.1.9.4
@@ -164,14 +168,14 @@ v1.9.0
     Added Popup Message & Kill-Switch
     Improved scanning pattern to list less matches
     Refactored code
-v.1.8.0
+v1.8.0
     Run scanner in foreground
     Suspend loading for 30 minutes if eval() or exec() is found.
-v.1.6.7
+v1.6.7
     Update README for new TS4 version
-v.1.6.6
+v1.6.6
     Update README for new TS4 version
-v.1.6.5
+v1.6.5
     Update README for new TS4 version
 v1.6.4
     Remove ts4script.py from code

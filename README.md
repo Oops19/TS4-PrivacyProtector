@@ -1,52 +1,59 @@
-# Privacy Protector
+# 🔒 Privacy Protector
 This mod includes reviewed S4CL code to avoid and dependency to other mods.
 
-## Features
-It blocks, in contrary to ModGuard, also most mods which can be found on NSFW pages.
+## 🍎 Mac Version
+The Mac builds should be used on Mac.  
+They don't use `ctypes` and don't show a popup message if something evil is detected.  
+They can be used also on Windows.
 
-### Blocking Features
-This mods blocks some Python calls which compromise security.
+## ⚙️ Features
+It blocks, in contrary to ModGuard, also most mods which can be found on SFW & NSFW pages.  
+If eval() or exec() are found further execution will be prevented.  
+If the loading screen is displayed longer than usual on Mac check the logs. On Windows a popup should appear.
 
-This mod does not block
+### 🚫 Blocking Features
+This mod blocks some Python calls which compromise security.
+
+This mod does not block:
 * File access (reading, writing, encrypting, deleting files locally and in the network, USB and NAS)
 * Python commands to load and/or execute code:
   * eval()
   * exec()
   * sys.modules()
 
-Unfortunately the insecure eval() and exec() commands are used by TS4 itself.
-They work very good as the initial attack vector to execute code and to encrypt files.
-Python-based ransomware is available and it works fine. 
+Unfortunately the insecure eval() and exec() commands are used by TS4 itself.  
+They work very well as the initial attack vector to execute code and to encrypt files.  
+Python-based ransomware is available and it works fine.  
 Without the ability to connect to the internet there should be at least no data breach.  
 
 `sys.modules()` is needed by TS4 itself and file access is needed by mods to write log files.
 
-### Logging Features
+### 📝 Logging Features
 This mod supports scanning of script mods.
 
-This mod scans `*.zip`, `*.ts4script` and `*.py` files the `The Sims 4/Mods/` and all sub-directories 
+This mod scans `*.zip`, `*.ts4script` and `*.py` files in `The Sims 4/Mods/` and all sub-directories.  
 Mods which are saved to `The Sims 4/Mods/AAA/AAA/` (or any other 2nd level directory) will likely not be executed by TS4 but still scanned.
 
-It does not yet read and scan `*.package` files. Malformed `Package`files to exploit vulnerabilities in `TS4.exe` usually crash the process and do no harm. 
+It does not yet read and scan `*.package` files. Malformed `Package` files to exploit vulnerabilities in `TS4.exe` usually crash the process and do no harm. 
 
-## Usage
-Read `Addendum / Installation` to install this mod. 
-It should block all known methods to download and install malware.
+## ▶️ Usage
+Read `Addendum / Installation` to install this mod.  
+It should block all known methods to download and install malware.  
 It writes logs and shows an 'Alert' if something is detected.
 
-The mod does not block execution of malware which runs completely offline.
+The mod does not block execution of malware which runs completely offline.  
 To protect against such mods:
 * Scan the mods before installing them and review the log files.
-* Never ever install a mod which uses eval() or exec().  Ask the mod author to fix their mod.
+* Never ever install a mod which uses eval() or exec(). Ask the mod author to fix their mod.
 
-If mods with eval() or exec() statements are found this mod will show a popup window and block further loading and execution of mods.
-The game will shut down upon closing the window and allow you to remove these mods.
-Or you might add them to the exception list and enjoy the risk.
+If mods with eval() or exec() statements are found this mod will show a popup window and block further loading and execution of mods.  
+The game will shut down upon closing the window and allow you to remove these mods.  
+Or you might add them to the exception list and accept the risk.
 
-### Background
-Some mods invade the privacy of users and send a notification to the author every time `The Sims 4` is started.
-While the `TS4.exe` process sends data to EA there is no need that mods do this.
-Mod creators have no legitimate reason to collect data like
+### 📚 Background
+Some mods invade the privacy of users and send a notification to the author every time `The Sims 4` is started.  
+While the `TS4.exe` process sends data to EA there is no need that mods do this.  
+Mod creators have no legitimate reason to collect data like:
 * Installed UGC of players
 * Knowing when players start `The Sims 4`
 * Geolocation of players
@@ -58,29 +65,31 @@ Other mods also download and execute malware.
 
 All mods can be considered as UGC and the EA TOS https://tos.ea.com/legalapp/WEBTERMS/US/en/PC/ applies:
 
-#### When you access or use an EA Service, you agree that you will not:
+#### 📜 EA Terms of Service Excerpt
+When you access or use an EA Service, you agree that you will not:
 * Use any software or program that damages, interferes with or disrupts an EA Service or another's computer or property, such as denial of service attacks, spamming, hacking, or uploading computer viruses, worms, Trojan horses, cancelbots, spyware, corrupted files and time bombs.
 * Interfere with or disrupt another player's use of an EA Service. This includes disrupting the normal flow of game play, chat or dialogue within an EA Service by, for example, using vulgar or harassing language, being abusive, excessive shouting (all caps), spamming, flooding or hitting the return key repeatedly.
 * Attempt to obtain, or phish for, a password, account information, or other private information from anyone else on EA Services.
 
-This mod does not disrupt any other normal mod.
-* It will disrupt mods which violate your privacy.
-* It will affect multiplayer mods which usually violate the EA TOS.
-* It will also disrupt mods which make use of questionable functions for other purposes.
+---
+
+This mod does not disrupt any other normal mod.  
+* It will disrupt mods which violate your privacy.  
+* It will affect multiplayer mods which usually violate the EA TOS.  
+* It will also disrupt mods which make use of questionable functions for other purposes.  
 * Mods opening a TCP connection will also be affected even though an open socket alone does not violate privacy.
 
-It may break some mods you have installed, but this is very unlikely.
-You should be aware of these mods already.
+It may break some mods you have installed, but this is very unlikely.  
+You should be aware of these mods already.  
 * In case there is an issue you can always uninstall this mod.
 
-During my tests I identified a few tracking mods but no False Positives were blocked.
+During my tests I identified a few tracking mods but no False Positives were blocked.  
 I have been testing a lot, also with UGC containing malware.
 
-The scanner itself will detect many things and lists them all.
-Not everything detected is an actual call, it can also be a constant or string.
-Du to the options Python has to write code it's hard to improve this behaviour.
-In the scanners log file one can observe a lot of 'False Positives'.
-
+The scanner itself will detect many things and lists them all.  
+Not everything detected is an actual call, it can also be a constant or string.  
+Due to the options Python has to write code it's hard to improve this behaviour.  
+In the scanner’s log file one can observe a lot of 'False Positives'.
 
 
 ## Internals
@@ -93,7 +102,7 @@ It will raise a PrivacyException to prevent the further execution of this part o
 
 It logs data to `The Sims 4/mod_logs/PrivacyProtector.txt` for review.
 
-If it detects the usage of a very questionable method it will show an in-game popup.
+If it detects the usage of a very questionable method it will show a popup.
 
 
 #### Eval() & Exec()

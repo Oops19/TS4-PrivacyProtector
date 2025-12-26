@@ -1,11 +1,11 @@
 # The most useful windows datatypes
-from privacy_protector import pp_ctypes
+import pp_ctypes
 
 BYTE = pp_ctypes.c_byte
 WORD = pp_ctypes.c_ushort
 DWORD = pp_ctypes.c_ulong
 
-#UCHAR = s4cl_ctypes.c_uchar
+#UCHAR = pp_ctypes.c_uchar
 CHAR = pp_ctypes.c_char
 WCHAR = pp_ctypes.c_wchar
 UINT = pp_ctypes.c_uint

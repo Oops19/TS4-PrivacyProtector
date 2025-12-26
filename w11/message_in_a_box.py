@@ -4,7 +4,7 @@
 #
 
 
-from privacy_protector import pp_ctypes
+import pp_ctypes
 
 
 class MessageInABox:

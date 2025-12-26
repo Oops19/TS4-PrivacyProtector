@@ -4,10 +4,10 @@
 #
 
 
-from privacy_protector import pp_ctypes
-from privacy_protector.w11.manage_hwnd import ManageHWND
+import pp_ctypes
+from w11.manage_hwnd import ManageHWND
 
-from privacy_protector.w11.message_in_a_box import MessageInABox
+from w11.message_in_a_box import MessageInABox
 
 from privacy_protector.modinfo import S4CLModInfo
 from privacy_protector.s4cl.s4cl_common_log_registry import S4CLCommonLog

@@ -4,13 +4,11 @@
 #
 
 
-from privacy_protector import pp_ctypes
-from privacy_protector.pp_ctypes import wintypes
-
+import pp_ctypes
+from pp_ctypes import wintypes
 from privacy_protector.modinfo import S4CLModInfo
 from privacy_protector.s4cl.s4cl_common_log_registry import S4CLCommonLog
 log = S4CLCommonLog(S4CLModInfo.mod_name)
-log.debug(f"hwnd ...")
 
 
 class ManageHWND:
