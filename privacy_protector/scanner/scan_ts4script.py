@@ -175,12 +175,19 @@ class Ts4ScriptFiles:
         if c > 0:
             Ts4ScriptFiles.log(output, f"!!!! Found {c} strings closely matching critical statements. Review the offending mods and restart!")
         Ts4ScriptFiles.log(output, f"**** Summary of files with critical issues: {review_mods}")
+        if review_mods:
+            mini_review_mods = set()
+            for file_name in review_mods:
+                mini_review_mods.add(file_name.rpartition(os.sep)[2])
+            Ts4ScriptFiles.log(output, f"**** Summary of files with critical issues: {mini_review_mods}")
         if suspend_progress:
             Alert('Privacy Protector', f"One or more mods with {e_val}() and/or {e_xec}() statements have been found. Please review these mods and define delete the insecure mods or define them as exceptions if you love the risk. Click 'OK' to EXIT the game for your own safety.", fatal=True)
             for i in sorted(range(1, 31), reverse=True):
                 Ts4ScriptFiles.log(output, f"!!!! Delete the offending mods with {e_val} and/or {e_xec}!")
                 Ts4ScriptFiles.log(output, f"!!!! Loading will continue in {i} minutes!")
                 time.sleep(60)
+
+
         if c > 0:
             message = f"Review these mods: {review_mods}\n\n"
             if len(Scanner.found_networks) > 0:

@@ -144,10 +144,13 @@ class ModInfo(S4CLCommonModInfo):
 
     @property
     def _version(self) -> str:
-        return '2.0.0'
+        return '2.0.1'
 
 
 r'''
+v2.0.1
+    PP-8 Add 'privacy_protector.ts4script' for a better user experience.
+    PP-9 Log also a list with only the mod names, without path.
 v2.0.0
     PP-5 Dedicated Windows and Mac (without ctypes) builds
     PP-6 Fix 'privacy.scan'
