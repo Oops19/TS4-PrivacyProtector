@@ -149,7 +149,7 @@ class ModInfo(S4CLCommonModInfo):
 
 r'''
 v2.0.1
-    PP-8 Add 'privacy_protector.ts4script' for a better user experience.
+    PP-8 Add 'privacy_protector.ts4script' to skip_mods for a better user experience.
     PP-9 Log also a list with only the mod names, without path.
 v2.0.0
     PP-5 Dedicated Windows and Mac (without ctypes) builds

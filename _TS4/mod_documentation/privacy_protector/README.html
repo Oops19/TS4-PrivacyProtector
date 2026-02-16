@@ -7,7 +7,7 @@ They don't use <i>ctypes</i> and don't show a popup message if something evil is
 They can be used also on Windows.<br/>
 <br/>
 <h2>⚙️ Features</h2>
-It blocks, in contrary to ModGuard, also most mods which can be found on SFW & NSFW pages.<br/>
+It blocks, in contrary to ModGuard, also most mods with malware which can be found on SFW & NSFW pages.<br/>
 If eval() or exec() are found further execution will be prevented.<br/>
 If the loading screen is displayed longer than usual on Mac check the logs. On Windows a popup should appear.<br/>
 <br/>
@@ -20,23 +20,22 @@ This mod does not block:<br/>
 	<li>Python commands to load and/or execute code:</li>
 	<li>eval()</li>
 	<li>exec()</li>
-	<li>sys.modules()</li>
+	<li>sys.modules() - Needed by TS4 itself and file access is needed by mods to write log files</li>
 </ul>
 <br/>
 Unfortunately the insecure eval() and exec() commands are used by TS4 itself.<br/>
 They work very well as the initial attack vector to execute code and to encrypt files.<br/>
-Python-based ransomware is available and it works fine.<br/>
+Hih-quality python based ransomware is available and could be added to script mods.<br/>
 Without the ability to connect to the internet there should be at least no data breach.<br/>
-<br/>
-<i>sys.modules()</i> is needed by TS4 itself and file access is needed by mods to write log files.<br/>
 <br/>
 <h3>📝 Logging Features</h3>
 This mod supports scanning of script mods.<br/>
 <br/>
-This mod scans <i>*.zip`, <i>*.ts4script</i> and <i>*.py</i> files in <i>The Sims 4/Mods/</i> and all sub-directories.<br/>
+This mod scans <i>*.zip`, <i>*.ts4script</i> and <i>*.py</i> files in <i>The Sims 4/Mods/</i> and all subdirectories.<br/>
 Mods which are saved to <i>The Sims 4/Mods/AAA/AAA/</i> (or any other 2nd level directory) will likely not be executed by TS4 but still scanned.<br/>
 <br/>
-It does not yet read and scan <i>*.package</i> files. Malformed <i>Package</i> files to exploit vulnerabilities in <i>TS4.exe</i> usually crash the process and do no harm.<br/>
+It does not yet read and scan <i>*.package</i> files.<br/>
+Malformed <i>Package</i> files to exploit vulnerabilities in <i>TS4.exe</i> usually crash the process and do no further harm.<br/>
 <br/>
 <h2>▶️ Usage</h2>
 Read <i>Addendum / Installation</i> to install this mod.<br/>
@@ -51,8 +50,27 @@ To protect against such mods:<br/>
 </ul>
 <br/>
 If mods with eval() or exec() statements are found this mod will show a popup window and block further loading and execution of mods.<br/>
-The game will shut down upon closing the window and allow you to remove these mods.<br/>
+The game will shut down upon closing the window (on Windows) and allow you to remove these mods.<br/>
 Or you might add them to the exception list and accept the risk.<br/>
+<br/>
+<h3>⨓ Excluding mods</h3>
+The initial run should log at the end of the file:<br/>
+<ul>
+	<li>INFO **** Summary of files with critical issues: {'\\path_to\\mod_1.ts4script', '\\path_to\\mod_2.ts4script', ...}</li>
+	<li>INFO **** Summary of files with critical issues: {'mod_1.ts4script', 'mod_2.ts4script', ...}</li>
+</ul>
+<br/>
+To look at mod_1 search for <i>mod_1.ts4script`:<br/>
+*Scanning '\path_to\mod_1.ts4script'<br/>
+<ul>
+	<li>Seems OK (part of string). Found 'system' in '\path_to\mod_1.ts4script(dir/name.pyc)': ['z8balance_system.balance_s']</li>
+	<li>Seems OK (webbrowser not found). Found 'open' in '\path_to\mod_1.ts4script(dir/name.pyc)': ['06\\xda\\x04openr\\x14\\x00\\']</li>
+	<li>!! Found 'importlib' in '\path_to\mod_1.ts4script(dir/name.pyc)': ['et\\\\xda\\\\timportlib\\\\xda\\\\rim']</li>
+	<li>Seems OK (pip not found). Found 'main' in '\path_to\mod_1.ts4script(dir/name.pyc)': ['ameZ\\x14remaining_attrib']</li>
+</ul>
+<br/>
+If this looks all fine (no matter what can be done with importlib if abused) add 'mod_1.ts4script' (or an empty file with the same name) to 'The Sims 4/mod_data/privacy_protector/skip_mods/'.<br/>
+In case it doesn't look fine continue reading.<br/>
 <br/>
 <h3>📚 Background</h3>
 Some mods invade the privacy of users and send a notification to the author every time <i>The Sims 4</i> is started.<br/>
@@ -286,7 +304,7 @@ This mod is still starting up fine while I'm looking for a way to avoid this exc
 <h1>📝 Addendum</h1>
 <br/>
 <h2>🔄 Game compatibility</h2>
-This mod has been tested with <i>The Sims 4</i> 1.120.140, S4CL 3.17, TS4Lib 0.3.42.<br/>
+This mod has been tested with <i>The Sims 4</i> 1.121.342, S4CL 3.17, TS4Lib 0.3.42.<br/>
 It is expected to remain compatible with future releases of TS4, S4CL, and TS4Lib.<br/>
 <br/>
 <h2>📦 Dependencies</h2>
@@ -421,7 +439,7 @@ To remove all of my mods, delete the following folders:<br/>
 <h1>📝 Addendum</h1>
 <br/>
 <h2>🔄 Game compatibility</h2>
-This mod has been tested with <i>The Sims 4</i> 1.120.140, S4CL 3.17, TS4Lib 0.3.42.<br/>
+This mod has been tested with <i>The Sims 4</i> 1.121.361, S4CL 3.19, TS4Lib 0.3.42.<br/>
 It is expected to remain compatible with future releases of TS4, S4CL, and TS4Lib.<br/>
 <br/>
 <h2>📦 Dependencies</h2>

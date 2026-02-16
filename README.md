@@ -7,7 +7,7 @@ They don't use `ctypes` and don't show a popup message if something evil is dete
 They can be used also on Windows.
 
 ## ⚙️ Features
-It blocks, in contrary to ModGuard, also most mods which can be found on SFW & NSFW pages.  
+It blocks, in contrary to ModGuard, also most mods with malware which can be found on SFW & NSFW pages.  
 If eval() or exec() are found further execution will be prevented.  
 If the loading screen is displayed longer than usual on Mac check the logs. On Windows a popup should appear.
 
@@ -19,22 +19,21 @@ This mod does not block:
 * Python commands to load and/or execute code:
   * eval()
   * exec()
-  * sys.modules()
+  * sys.modules() - Needed by TS4 itself and file access is needed by mods to write log files
 
 Unfortunately the insecure eval() and exec() commands are used by TS4 itself.  
 They work very well as the initial attack vector to execute code and to encrypt files.  
-Python-based ransomware is available and it works fine.  
-Without the ability to connect to the internet there should be at least no data breach.  
-
-`sys.modules()` is needed by TS4 itself and file access is needed by mods to write log files.
+Hih-quality python based ransomware is available and could be added to script mods.  
+Without the ability to connect to the internet there should be at least no data breach.
 
 ### 📝 Logging Features
 This mod supports scanning of script mods.
 
-This mod scans `*.zip`, `*.ts4script` and `*.py` files in `The Sims 4/Mods/` and all sub-directories.  
+This mod scans `*.zip`, `*.ts4script` and `*.py` files in `The Sims 4/Mods/` and all subdirectories.  
 Mods which are saved to `The Sims 4/Mods/AAA/AAA/` (or any other 2nd level directory) will likely not be executed by TS4 but still scanned.
 
-It does not yet read and scan `*.package` files. Malformed `Package` files to exploit vulnerabilities in `TS4.exe` usually crash the process and do no harm. 
+It does not yet read and scan `*.package` files.
+Malformed `Package` files to exploit vulnerabilities in `TS4.exe` usually crash the process and do no further harm. 
 
 ## ▶️ Usage
 Read `Addendum / Installation` to install this mod.  
@@ -47,8 +46,23 @@ To protect against such mods:
 * Never ever install a mod which uses eval() or exec(). Ask the mod author to fix their mod.
 
 If mods with eval() or exec() statements are found this mod will show a popup window and block further loading and execution of mods.  
-The game will shut down upon closing the window and allow you to remove these mods.  
+The game will shut down upon closing the window (on Windows) and allow you to remove these mods.  
 Or you might add them to the exception list and accept the risk.
+
+### ⨓ Excluding mods
+The initial run should log at the end of the file:
+* INFO **** Summary of files with critical issues: {'\\path_to\\mod_1.ts4script', '\\path_to\\mod_2.ts4script', ...}
+* INFO **** Summary of files with critical issues: {'mod_1.ts4script', 'mod_2.ts4script', ...}
+
+To look at mod_1 search for `mod_1.ts4script`:
+*Scanning '\path_to\mod_1.ts4script'
+* Seems OK (part of string). Found 'system' in '\path_to\mod_1.ts4script(dir/name.pyc)': ['z8balance_system.balance_s']
+* Seems OK (webbrowser not found). Found 'open' in '\path_to\mod_1.ts4script(dir/name.pyc)': ['06\\xda\\x04openr\\x14\\x00\\']
+* !! Found 'importlib' in '\path_to\mod_1.ts4script(dir/name.pyc)': ['et\\\\xda\\\\timportlib\\\\xda\\\\rim']
+* Seems OK (pip not found). Found 'main' in '\path_to\mod_1.ts4script(dir/name.pyc)': ['ameZ\\x14remaining_attrib']
+
+If this looks all fine (no matter what can be done with importlib if abused) add 'mod_1.ts4script' (or an empty file with the same name) to 'The Sims 4/mod_data/privacy_protector/skip_mods/'.
+In case it doesn't look fine continue reading.
 
 ### 📚 Background
 Some mods invade the privacy of users and send a notification to the author every time `The Sims 4` is started.  
@@ -244,7 +258,7 @@ This mod is still starting up fine while I'm looking for a way to avoid this exc
 # 📝 Addendum
 
 ## 🔄 Game compatibility
-This mod has been tested with `The Sims 4` 1.120.140, S4CL 3.17, TS4Lib 0.3.42.
+This mod has been tested with `The Sims 4` 1.121.342, S4CL 3.17, TS4Lib 0.3.42.
 It is expected to remain compatible with future releases of TS4, S4CL, and TS4Lib.
 
 ## 📦 Dependencies
