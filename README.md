@@ -258,7 +258,7 @@ This mod is still starting up fine while I'm looking for a way to avoid this exc
 # 📝 Addendum
 
 ## 🔄 Game compatibility
-This mod has been tested with `The Sims 4` 1.121.372, S4CL 3.20, TS4Lib 0.3.42.
+This mod has been tested with `The Sims 4` 1.122.218, S4CL 3.20, TS4Lib 0.3.42.
 It is expected to remain compatible with future releases of TS4, S4CL, and TS4Lib.
 
 ## 📦 Dependencies
